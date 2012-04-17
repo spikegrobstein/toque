@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: toque
-# Recipe:: default
+# Recipe:: user
 #
 # Copyright 2012, YOUR_COMPANY_NAME
 #
