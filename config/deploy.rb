@@ -1,11 +1,11 @@
-set :application, "exchange"
-set :repository,  "git@github.com:ticketevolution/exchange.git"
+set :application, "invoicing"
+set :repository,  "git@github.com:spikegrobstein/invoic0r.git"
 
 default_run_options[:pty] = true  # Must be set for the password prompt from git to work
 
 # domain can be per-environment, as well.
 # gets passed along to recipes as well
-set :domain, 'exchange.ticketevolution.com'
+set :domain, 'invoicing.example.com'
 
 set :cookbook_repository, 'asdf'
 
