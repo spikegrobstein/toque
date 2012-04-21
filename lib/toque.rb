@@ -60,45 +60,45 @@ module Toque
 end
 
 Capistrano::Configuration.instance.load do
-namespace :config do
+  namespace :config do
 
-  task :build do
-    configure_chef
+    task :build do
+      configure_chef
   
-    # all chef stuff must use sudo
-    set :user, admin_user
-    Toque::chef_recipes.each do |recipe, options|
-      Toque::run_recipe recipe, options
+      # all chef stuff must use sudo
+      set :user, admin_user
+      Toque::chef_recipes.each do |recipe, options|
+        Toque::run_recipe recipe, options
+      end
     end
-  end
 
-  desc "Say what you would do with the chef recipes without actually doing it."
-  task :dry_run do
-    ap :node => Toque::build_node_json(variables, Toque::build_run_list(fetch :run_list, nil))
-  end
+    desc "Say what you would do with the chef recipes without actually doing it."
+    task :dry_run do
+      ap :node => Toque::build_node_json(variables, Toque::build_run_list(fetch :run_list, nil))
+    end
   
-  # push all chef configurations to server
-  task :configure_chef do
-    cookbook_path = File.join(File.dirname(__FILE__), '../cookbooks')
+    # push all chef configurations to server
+    task :configure_chef do
+      cookbook_path = File.join(File.dirname(__FILE__), '../cookbooks')
 
-    cookbook_archive_path = "/tmp/cookbooks.tar.gz"
+      cookbook_archive_path = "/tmp/cookbooks.tar.gz"
 
-    `tar cfz #{cookbook_archive_path} cookbooks`
+      `tar cfz #{cookbook_archive_path} cookbooks`
 
-    upload cookbook_archive_path, cookbook_archive_path
-    run "cd /tmp && tar zxvf #{ File.basename cookbook_archive_path }"
+      upload cookbook_archive_path, cookbook_archive_path
+      run "cd /tmp && tar zxvf #{ File.basename cookbook_archive_path }"
 
-    put "file_cache_path '/var/chef-solo'\ncookbook_path '/tmp/cookbooks'", '/tmp/solo.rb'
+      put "file_cache_path '/var/chef-solo'\ncookbook_path '/tmp/cookbooks'", '/tmp/solo.rb'
 
-    @chef_configured = true
-  end
-
-  if ( exists?(:cookbook_repository) )
-    desc "Check-out/clone the cookbook repository"
-    task :prepare do
-      puts "going to fetch the cookbook repository"
+      @chef_configured = true
     end
-  end
 
-end
+    if ( exists?(:cookbook_repository) )
+      desc "Check-out/clone the cookbook repository"
+      task :prepare do
+        puts "going to fetch the cookbook repository"
+      end
+    end
+
+  end
 end
