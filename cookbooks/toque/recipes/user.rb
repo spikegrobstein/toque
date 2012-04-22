@@ -20,11 +20,11 @@
 # base template configuration for ssh config
 
 
-user deploy_user do
+user node.deploy_user do
   action :create
-  shell     node.deploy_user_shell    || '/bin/bash'
-  home      node.deploy_user_home     || "/home/#{ node.deploy_user }"
-  comment   node.deploy_user_comment  || "deploy user for #{ node.application }"
+  shell     node[:deploy_user_shell]    || '/bin/bash'
+  home      node[:deploy_user_home]     || "/home/#{ node.deploy_user }"
+  comment   node[:deploy_user_comment]  || "deploy user for #{ node.application }"
   supports  :manage_home => true
 end
 
