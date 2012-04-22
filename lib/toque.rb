@@ -8,10 +8,6 @@ module Toque
       @chef_recipes ||= {}
       @chef_recipes[recipe_name] = options
     end
-    
-    def build_run_list(run_list)
-      run_list.split ','
-    end
 
     def build_node_json(variables, run_list=nil)
       raise "Must supply capistrano variables. None given." if variables.nil?
@@ -46,16 +42,6 @@ module Toque
     # to run recipes, call config:build task
     # can't specify singular recipes to run. will always run all
 
-
-    # run a given recipe using the given options
-    # takes same options as run command
-    def run_recipe(recipe, options={})  
-      json_data = Toque::build_node_json(variables, Toque::build_run_list(fetch :run_list, nil))
-  
-      put json_data.to_json, '/tmp/node.json'
-  
-      sudo "chef-solo -c /tmp/solo.rb -j /tmp/node.json", options
-    end
   end
 end
 
@@ -67,8 +53,15 @@ Capistrano::Configuration.instance.load do
   
       # all chef stuff must use sudo
       set :user, admin_user
+      
       Toque::chef_recipes.each do |recipe, options|
-        Toque::run_recipe recipe, options
+        #Toque::run_recipe recipe, options
+        
+        json_data = Toque::build_node_json(variables, fetch(:run_list, nil).split(','))
+
+        put json_data.to_json, '/tmp/node.json'
+
+        sudo "chef-solo -c /tmp/solo.rb -j /tmp/node.json", options
       end
     end
 
