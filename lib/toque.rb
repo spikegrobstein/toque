@@ -67,7 +67,7 @@ Capistrano::Configuration.instance.load do
 
     desc "Say what you would do with the chef recipes without actually doing it."
     task :dry_run do
-      ap :node => Toque::build_node_json(variables, Toque::build_run_list(fetch :run_list, nil))
+      ap :node => Toque::build_node_json(variables, fetch(:run_list, nil).split(','))
     end
   
     # push all chef configurations to server
