@@ -5,6 +5,7 @@ Capistrano::Configuration.instance.load do
   
   namespace :toque do
 
+    desc "Run all configured recipes"
     task :run_recipes do
       old_user = user
       # all chef stuff must use sudo
@@ -24,23 +25,20 @@ Capistrano::Configuration.instance.load do
         sudo "chef-solo -c /tmp/solo.rb -j /tmp/node.json", options
       end
       
+      # reset the old user value
       set :user, old_user
     end
 
-    desc "Say what you would do with the chef recipes without actually doing it."
+    desc "dumps the node json file and prints it to the screen using awesome_print"
     task :dry_run do
-      ap :node => Toque::build_node_json(variables, fetch(:run_list, nil).split(','))
+      ap :node => Toque::build_node_json(variables, Toque::chef_recipes.keys.split(','))
     end
   
     # push all chef configurations to server
+    desc "[internal] Upload cookbooks to all configured servers."
     task :upload_cookbooks do
-      #cookbook_archive_path = "/tmp/cookbooks.tar.gz"
-
-      #`tar cfz #{ cookbook_archive_path } #{ cookbooks_path }`
+      # upload cookbooks
       upload cookbooks_path, '/tmp/cookbooks'
-      
-      #upload cookbook_archive_path, cookbook_archive_path
-      #run "cd /tmp && tar zxvf #{ File.basename cookbook_archive_path }"
       
       # generate the solo.rb file
       put "file_cache_path '/var/chef-solo'\ncookbook_path '/tmp/cookbooks'", '/tmp/solo.rb'
