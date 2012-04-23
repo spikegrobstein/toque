@@ -79,11 +79,9 @@ Capistrano::Configuration.instance.load do
   
     # push all chef configurations to server
     task :configure_chef do
-      cookbook_path = File.join(File.dirname(__FILE__), '../cookbooks')
-
       cookbook_archive_path = "/tmp/cookbooks.tar.gz"
 
-      `tar cfz #{cookbook_archive_path} cookbooks`
+      `tar cfz #{ cookbook_archive_path } #{ cookbooks_path }`
 
       upload cookbook_archive_path, cookbook_archive_path
       run "cd /tmp && tar zxvf #{ File.basename cookbook_archive_path }"
