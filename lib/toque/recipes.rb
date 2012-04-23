@@ -1,6 +1,8 @@
 require 'fileutils'
 
 Capistrano::Configuration.instance.load do
+  set :cookbooks_path, { File.expand_path('./cookbooks') }
+  
   namespace :toque do
 
     task :run_recipes do
