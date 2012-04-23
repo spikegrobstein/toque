@@ -1,5 +1,6 @@
 require "toque/version"
 require 'toque/recipes'
+require 'json'
 
 module Toque
   
