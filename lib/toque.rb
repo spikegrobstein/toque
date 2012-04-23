@@ -53,7 +53,7 @@ end
 Capistrano::Configuration.instance.load do
   namespace :toque do
 
-    task :build do
+    task :run_recipes do
       upload_cookbooks
   
       # all chef stuff must use sudo
