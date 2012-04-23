@@ -6,4 +6,4 @@ respawn
 description "Resque Worker"
 
 # run the thing:
-exec -su - <%= @deploy_user %> -c 'cd <%= @current_path %>; export RAILS_ENV=<%= @rails_env %>; export QUEUE=<%= @queues %>; bundle exec rake resque:work >> <%= @shared_path %>/log/resque-<%= @worker_number %>.log 2>&1'
+exec su - <%= @deploy_user %> -c 'cd <%= @current_path %>; export RAILS_ENV=<%= @rails_env %>; export QUEUE=<%= @queues %>; bundle exec rake resque:work >> <%= @shared_path %>/log/resque-<%= @worker_number %>.log 2>&1'
