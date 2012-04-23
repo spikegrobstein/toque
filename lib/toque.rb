@@ -54,7 +54,7 @@ Capistrano::Configuration.instance.load do
   namespace :config do
 
     task :build do
-      configure_chef
+      upload_cookbooks
   
       # all chef stuff must use sudo
       set :user, admin_user
@@ -78,7 +78,7 @@ Capistrano::Configuration.instance.load do
     end
   
     # push all chef configurations to server
-    task :configure_chef do
+    task :upload_cookbooks do
       cookbook_archive_path = "/tmp/cookbooks.tar.gz"
 
       `tar cfz #{ cookbook_archive_path } #{ cookbooks_path }`
@@ -87,8 +87,6 @@ Capistrano::Configuration.instance.load do
       run "cd /tmp && tar zxvf #{ File.basename cookbook_archive_path }"
 
       put "file_cache_path '/var/chef-solo'\ncookbook_path '/tmp/cookbooks'", '/tmp/solo.rb'
-
-      @chef_configured = true
     end
 
     if ( exists?(:cookbook_repository) )
