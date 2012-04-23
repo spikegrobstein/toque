@@ -64,9 +64,9 @@ Capistrano::Configuration.instance.load do
       Toque::chef_recipes.each do |recipe, options|
         server_json = json_data.dup
         
-        server_json[:run_list] = recipe
+        server_json[:run_list] = [recipe]
         
-        put json_data.to_json, '/tmp/node.json'
+        put server_json.to_json, '/tmp/node.json'
 
         sudo "chef-solo -c /tmp/solo.rb -j /tmp/node.json", options
       end
