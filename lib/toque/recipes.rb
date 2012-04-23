@@ -34,13 +34,15 @@ Capistrano::Configuration.instance.load do
   
     # push all chef configurations to server
     task :upload_cookbooks do
-      cookbook_archive_path = "/tmp/cookbooks.tar.gz"
+      #cookbook_archive_path = "/tmp/cookbooks.tar.gz"
 
-      `tar cfz #{ cookbook_archive_path } #{ cookbooks_path }`
-
-      upload cookbook_archive_path, cookbook_archive_path
-      run "cd /tmp && tar zxvf #{ File.basename cookbook_archive_path }"
-
+      #`tar cfz #{ cookbook_archive_path } #{ cookbooks_path }`
+      upload cookbooks_path, '/tmp/cookbooks'
+      
+      #upload cookbook_archive_path, cookbook_archive_path
+      #run "cd /tmp && tar zxvf #{ File.basename cookbook_archive_path }"
+      
+      # generate the solo.rb file
       put "file_cache_path '/var/chef-solo'\ncookbook_path '/tmp/cookbooks'", '/tmp/solo.rb'
     end
 
