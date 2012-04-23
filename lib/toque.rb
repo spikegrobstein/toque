@@ -51,7 +51,7 @@ module Toque
 end
 
 Capistrano::Configuration.instance.load do
-  namespace :config do
+  namespace :toque do
 
     task :build do
       upload_cookbooks
