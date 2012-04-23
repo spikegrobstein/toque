@@ -44,7 +44,7 @@ if node.attribute?(:authorized_keys)
   # now add keys
   file "/home/#{ node.deploy_user }/.ssh/authorized_keys2" do
     content keys
-    backup :false
+    backup 0
     mode "0600"
     owner node.deploy_user
     group node.deploy_user
