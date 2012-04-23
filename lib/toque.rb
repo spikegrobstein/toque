@@ -1,3 +1,5 @@
+require "toque/version"
+
 module Toque
   
   class << self
