@@ -32,7 +32,7 @@ end
 if node.attribute?(:authorized_keys)
   
   # create the user's .ssh directory
-  directory "/home/#{ deploy_user }/.ssh" do
+  directory "/home/#{ node.deploy_user }/.ssh" do
     owner node.deploy_user
     group node.deploy_user
     mode 0744
@@ -42,12 +42,12 @@ if node.attribute?(:authorized_keys)
   keys = [*node.authorized_keys].join "\n"
 
   # now add keys
-  file "/home/#{ deploy_user }/.ssh/authorized_keys2" do
+  file "/home/#{ node.deploy_user }/.ssh/authorized_keys2" do
     content keys
     backup :false
     mode "0600"
-    owner deploy_user
-    group deploy_user
+    owner node.deploy_user
+    group node.deploy_user
     
     # will always overwrite the file. this way, you can easily manage this file
     action :create
