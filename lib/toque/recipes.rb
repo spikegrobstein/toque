@@ -6,10 +6,11 @@ Capistrano::Configuration.instance.load do
   namespace :toque do
 
     task :run_recipes do
-      upload_cookbooks
-  
+      old_user = user
       # all chef stuff must use sudo
       set :user, admin_user
+      
+      upload_cookbooks
       
       json_data = Toque::build_node_json(variables)
       
@@ -22,6 +23,8 @@ Capistrano::Configuration.instance.load do
 
         sudo "chef-solo -c /tmp/solo.rb -j /tmp/node.json", options
       end
+      
+      set :user, old_user
     end
 
     desc "Say what you would do with the chef recipes without actually doing it."
