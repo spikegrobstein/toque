@@ -1,4 +1,5 @@
 require "toque/version"
+require 'toque/recipes'
 
 module Toque
   
