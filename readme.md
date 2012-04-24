@@ -51,6 +51,10 @@ ALL capistrano variables are visible to your chef recipes. `Toque::chef_recipe` 
 
 Toque comes with several built-in recipes installed under a `toque` cookbook when you run the `toque:init:cookbooks` task. Look at the recipe source to see additional variables that the recipes support and see how they work.
 
+Toque recipes can be registered by using a symbol without the `toque` namespace. For instance, the above example can be rewritten as the following:
+
+    Toque::chef_recipe :logrotate, :only => [ :app, :resque ]
+
 ## License
 
 MIT License

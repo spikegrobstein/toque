@@ -13,6 +13,13 @@ module Toque
     # options will be passed to the capistrano run() function
     def chef_recipe(recipe_name, options={})
       @chef_recipes ||= {}
+      
+      # if recipe_name is a symbol
+      # it's implicitely a toque recipe, so prefix that shit
+      if recipe_name.class == Symbol
+        recipe_name = "toque::#{recipe_name}"
+      end
+      
       @chef_recipes[recipe_name] = options
     end
 
