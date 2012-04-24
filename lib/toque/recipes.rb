@@ -61,6 +61,7 @@ Capistrano::Configuration.instance.load do
       
       desc "copy the default cookbooks"
       task :cookbooks do
+        puts "Installing default cookbooks..."
         FileUtils.cp_r File.join(File.dirname(__FILE__), '../cookbooks'), "./"
       end
     end
