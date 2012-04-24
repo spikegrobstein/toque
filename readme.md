@@ -47,13 +47,13 @@ That's it! If you run the `run_recipes` task, it will execute the `user` recipe 
 
 ALL capistrano variables are visible to your chef recipes. `Toque::chef_recipe` takes the same options as `run` and recipes are run in the order that they are defined in the file. For instance, you would want the `toque::logrotate` recipe only on the `app` and `resque` roles, like as follows:
 
-    Toque::chef_recipe 'toque::logrotate', :only => [ :app, :resque ]
+    Toque::chef_recipe 'toque::logrotate', :roles => [ :app, :resque ]
 
 Toque comes with several built-in recipes installed under a `toque` cookbook when you run the `toque:init:cookbooks` task. Look at the recipe source to see additional variables that the recipes support and see how they work.
 
 Toque recipes can be registered by using a symbol without the `toque` namespace. For instance, the above example can be rewritten as the following:
 
-    Toque::chef_recipe :logrotate, :only => [ :app, :resque ]
+    Toque::chef_recipe :logrotate, :roles => [ :app, :resque ]
 
 ## License
 
