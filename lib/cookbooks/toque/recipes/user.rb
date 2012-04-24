@@ -20,29 +20,31 @@
 # base template configuration for ssh config
 
 
+home_path = node[:deploy_user_home] || "/home/#{ node.deploy_user }"
+
 user node.deploy_user do
   action :create
   shell     node[:deploy_user_shell]    || '/bin/bash'
-  home      node[:deploy_user_home]     || "/home/#{ node.deploy_user }"
+  home      home_path
   comment   node[:deploy_user_comment]  || "deploy user for #{ node.application }"
   supports  :manage_home => true
+end
+
+# create the user's .ssh directory
+directory "#{ home_path }/.ssh" do
+  owner node.deploy_user
+  group node.deploy_user
+  mode 0744
 end
 
 # configure the deploy key if there's a deploy key configured
 if node.attribute?(:authorized_keys)
   
-  # create the user's .ssh directory
-  directory "/home/#{ node.deploy_user }/.ssh" do
-    owner node.deploy_user
-    group node.deploy_user
-    mode 0744
-  end
-  
   # build the content of the authorized_keys2 file
   keys = [*node.authorized_keys].join "\n"
 
   # now add keys
-  file "/home/#{ node.deploy_user }/.ssh/authorized_keys2" do
+  file "#{ home_path }/.ssh/authorized_keys2" do
     content keys
     backup 0
     mode "0600"
@@ -51,6 +53,31 @@ if node.attribute?(:authorized_keys)
     
     # will always overwrite the file. this way, you can easily manage this file
     action :create
+  end
+  
+end
+
+# set up the github deploy key
+if node.attribute?(:deploy_key)
+  
+  deploy_key_filename = "github-deploy-key"
+  
+  # write the deploy_key
+  file "#{ home_path }/.ssh/#{deploy_key_filename}" do
+    content node.deploy_key
+    
+    mode "0600"
+    owner node.deploy_user
+    group node.deploy_user
+  end
+  
+  # create the ssh config
+  # FIXME: currently, this overwrites the entire ssh config
+  file "#{ home_path }/.ssh/config" do
+    content "Host github.com\nIdentityFile #{ home_path }/.ssh/#{ deploy_key_filename }\n"
+    mode "0644"
+    owner node.deploy_user
+    group node.deploy_user
   end
   
 end
