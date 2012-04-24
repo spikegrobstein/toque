@@ -18,7 +18,7 @@ Very much a work in progress.
 
 Getting started using Toque is very easy. First, require it in your `Capfile` before you load your main `deploy.rb`:
 
-    require 'toque'
+    require 'toque/capistrano'
 
 At this point, `cap` will have a couple of additional tasks available to it. Run the `toque:init:cookbooks` task to install the `toque` cookbook and recipes into your project. These should be added to your repository. For example:
 

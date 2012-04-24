@@ -1,3 +1,4 @@
+require 'toque'
 require 'fileutils'
 
 Capistrano::Configuration.instance.load do
