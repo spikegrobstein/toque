@@ -48,7 +48,7 @@ Capistrano::Configuration.instance.load do
     desc "[internal] Upload cookbooks to all configured servers."
     task :upload_cookbooks do
       # upload cookbooks
-      upload cookbooks_path, '/tmp/cookbooks'
+      upload cookbooks_path, '/tmp/cookbooks', :max_hosts => 4
       
       # generate the solo.rb file
       put "file_cache_path '/var/chef-solo'\ncookbook_path '/tmp/cookbooks'", '/tmp/solo.rb'
