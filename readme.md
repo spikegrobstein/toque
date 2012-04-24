@@ -35,15 +35,15 @@ To get started with the `user` recipe, add the following to your capistrano `dep
     set :deploy_user, 'deploy' # this is the name of the user that the application will be run as. This defaults to the 'user' value that you may have already set.
     
     # now, tell Toque that you want to run that recipe:
-    Toque::chef_cookbook 'user'
+    Toque::chef_recipe 'toque::user'
     
 That's it! If you run the `run_recipes` task, it will execute the `user` recipe on the server:
 
     cap toque:run_recipes
 
-ALL capistrano variables are visible to your chef recipes. `Toque::chef_cookbook` takes the same options as `run` and recipes are run in the order that they are defined in the file.
+ALL capistrano variables are visible to your chef recipes. `Toque::chef_recipe` takes the same options as `run` and recipes are run in the order that they are defined in the file.
 
-Look at the recipe source to see additional variables that the recipes support and see how they work.
+Toque comes with several built-in recipes installed under a `toque` cookbook when you run the `toque:init:cookbooks` task. Look at the recipe source to see additional variables that the recipes support and see how they work.
 
 ## License
 
