@@ -31,17 +31,23 @@ Out of the box, Toque provides support for configuring deploy users, resque work
 
 To get started with the `user` recipe, add the following to your capistrano `deploy.rb`:
 
-    set :admin_user, 'admin' # this should be a user that has sudo access. This is the user that recipes are run as.
-    set :deploy_user, 'deploy' # this is the name of the user that the application will be run as. This defaults to the 'user' value that you may have already set.
+    # admin_user is the user that recipes are run as and MUST have sudo
+    set :admin_user, 'admin'
     
-    # now, tell Toque that you want to run that recipe:
+    # deploy_user is the name of the user that the application will be run as.
+    # Defaults to the 'user' value that you may have already set.
+    set :deploy_user, 'deploy'
+    
+    # register the 'toque::user' recipe with Toque
     Toque::chef_recipe 'toque::user'
     
 That's it! If you run the `run_recipes` task, it will execute the `user` recipe on the server:
 
     cap toque:run_recipes
 
-ALL capistrano variables are visible to your chef recipes. `Toque::chef_recipe` takes the same options as `run` and recipes are run in the order that they are defined in the file.
+ALL capistrano variables are visible to your chef recipes. `Toque::chef_recipe` takes the same options as `run` and recipes are run in the order that they are defined in the file. For instance, you would want the `toque::logrotate` recipe only on the `app` and `resque` roles, like as follows:
+
+    Toque::chef_recipe 'toque::logrotate', :only => [ :app, :resque ]
 
 Toque comes with several built-in recipes installed under a `toque` cookbook when you run the `toque:init:cookbooks` task. Look at the recipe source to see additional variables that the recipes support and see how they work.
 
