@@ -1,6 +1,7 @@
 require "toque/version"
-require 'toque/recipes'
 require 'json'
+
+Capistrano::Configuration.instance.load 'toque/recipes'
 
 module Toque
   
