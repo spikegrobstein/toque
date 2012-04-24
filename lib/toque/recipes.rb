@@ -2,6 +2,7 @@ require 'fileutils'
 
 Capistrano::Configuration.instance.load do
   set(:cookbooks_path) { File.expand_path('./cookbooks') }
+  set(:user) { fetch(:deploy_user, nil) }
   
   namespace :toque do
 
@@ -10,7 +11,13 @@ Capistrano::Configuration.instance.load do
       # all chef stuff must use sudo
       set :user, admin_user
       
-      upload_cookbooks
+      begin
+        upload_cookbooks
+      rescue
+        puts "Previous toque run did not complete, cleaning up..."
+        cleanup_cookbooks
+        retry
+      end
       
       json_data = Toque::build_node_json(variables)
       
@@ -23,6 +30,8 @@ Capistrano::Configuration.instance.load do
 
         sudo "chef-solo -c /tmp/solo.rb -j /tmp/node.json", options
       end
+      
+      cleanup_cookbooks
       
       set :user, old_user
     end
@@ -44,6 +53,10 @@ Capistrano::Configuration.instance.load do
       
       # generate the solo.rb file
       put "file_cache_path '/var/chef-solo'\ncookbook_path '/tmp/cookbooks'", '/tmp/solo.rb'
+    end
+    
+    task :cleanup_cookbooks do
+      run 'rm -rf /tmp/cookbooks /tmp/solo.rb /tmp/node.json || true'
     end
 
     if ( exists?(:cookbook_repository) )
