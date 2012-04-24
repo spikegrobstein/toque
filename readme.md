@@ -55,6 +55,10 @@ Toque recipes can be registered by using a symbol without the `toque` namespace.
 
     Toque::chef_recipe :logrotate, :roles => [ :app, :resque ]
 
+## Acknowledgements
+
+Work on this was inspired by my use of Chef at [Ticket Evolution](http://www.ticketevolution.com)
+
 ## License
 
 MIT License
