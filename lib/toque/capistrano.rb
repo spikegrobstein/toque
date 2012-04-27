@@ -35,7 +35,8 @@ Capistrano::Configuration.instance.load do
 
     desc "dumps the node json file and prints it to the screen using awesome_print"
     task :dry_run do
-      ap :node => Toque::build_node_json(variables, Toque::recipes.keys.split(','))
+      ap :node_json => Toque::build_node_json(variables)
+      ap :recipes => Toque::recipes
     end
   
     # push all chef configurations to server
