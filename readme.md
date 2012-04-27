@@ -54,6 +54,12 @@ Toque comes with several built-in recipes installed under a `toque` cookbook whe
 Toque recipes can be registered by using a symbol without the `toque` namespace. For instance, the above example can be rewritten as the following:
 
     Toque::chef_recipe :logrotate, :roles => [ :app, :resque ]
+    
+## TODO
+
+ * `before_recipe` and `after_recipe` hooks
+ * `chef-server` support
+ * don't require `toque:init:cookbooks` to use built-in `toque` recipes.
 
 ## Acknowledgements
 
