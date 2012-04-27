@@ -70,12 +70,16 @@ Capistrano::Configuration.instance.load do
       run "rm -rf #{ Toque::COOKBOOKS_PATH } /tmp/#{ Toque::SOLO_CONFIG_FILENAME } /tmp/#{ Toque::JSON_FILENAME } || true"
     end
 
-    if ( exists?(:cookbook_repository) )
-      desc "Check-out/clone the cookbook repository"
-      task :prepare do
-        puts "going to fetch the cookbook repository"
-      end
-    end
+    ## future feature
+    ## since toque uses local copies of the cookbooks,
+    ## it would be nice if they were kept up to date in the event that the user
+    ## wants to keep a separate repository for their cookbooks.
+    # if ( exists?(:cookbook_repository) )
+    #   desc "Check-out/clone the cookbook repository"
+    #   task :prepare do
+    #     puts "going to fetch the cookbook repository"
+    #   end
+    # end
 
     # initialize your shit.
     namespace :init do
