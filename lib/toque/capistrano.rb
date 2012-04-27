@@ -18,7 +18,7 @@ Capistrano::Configuration.instance.load do
       Toque::init_node_json(variables)
       
       Toque::recipes.each do |recipe, options|
-        put Toque::json_for_runlist(recipe).to_json, "/tmp/#{ Toque::JSON_FILENAME }"
+        put Toque::json_for_runlist(recipe), "/tmp/#{ Toque::JSON_FILENAME }"
 
         sudo "chef-solo -c /tmp/#{ Toque::SOLO_CONFIG_FILENAME } -j /tmp/#{ Toque::JSON_FILENAME }", options
       end

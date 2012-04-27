@@ -64,7 +64,7 @@ module Toque
     def json_for_runlist(runlist)
       new_json = @node_json.dup
       new_json[:run_list] = runlist
-      new_json
+      new_json.to_json
     end
     
     # returns the content of the solo configuration as a string
