@@ -22,9 +22,9 @@ Capistrano::Configuration.instance.load do
         
         server_json[:run_list] = [recipe]
         
-        put server_json.to_json, '/tmp/node.json'
+        put server_json.to_json, "/tmp/#{ Toque::JSON_FILENAME }"
 
-        sudo "chef-solo -c /tmp/solo.rb -j /tmp/node.json", options
+        sudo "chef-solo -c /tmp/#{ Toque::SOLO_CONFIG_FILENAME } -j /tmp/#{ Toque::JSON_FILENAME }", options
       end
       
       cleanup_cookbooks
@@ -66,11 +66,11 @@ Capistrano::Configuration.instance.load do
       end
       
       # generate the solo.rb file
-      put "file_cache_path '/var/chef-solo'\ncookbook_path '/tmp/cookbooks'", '/tmp/solo.rb'
+      put "file_cache_path '/var/chef-solo'\ncookbook_path '/tmp/cookbooks'", "/tmp/#{ Toque::SOLO_CONFIG_FILENAME }"
     end
     
     task :cleanup_cookbooks do
-      run 'rm -rf /tmp/cookbooks /tmp/solo.rb /tmp/node.json || true'
+      run "rm -rf /tmp/cookbooks /tmp/#{ Toque::SOLO_CONFIG_FILENAME } /tmp/#{ Toque::JSON_FILENAME } || true"
     end
 
     if ( exists?(:cookbook_repository) )

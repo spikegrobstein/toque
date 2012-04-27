@@ -11,6 +11,9 @@ module Toque
     :password
   ]
   
+  JSON_FILENAME = "node.json"
+  SOLO_CONFIG_FILENAME = "solo.rb"
+  
   class << self
     
     attr_reader :recipes
