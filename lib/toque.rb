@@ -3,6 +3,14 @@ require 'json'
 
 module Toque
   
+  # variables that we will filter out before passing to recipes
+  IGNORED_CAP_VARS = [
+    :source,
+    :strategy,
+    :logger,
+    :password
+  ]
+  
   class << self
     
     attr_reader :recipes
@@ -28,21 +36,13 @@ module Toque
 
     def build_node_json(variables, run_list=nil)
       raise "Must supply capistrano variables. None given." if variables.nil?
-
-      # variables that we will filter out before passing to recipes
-      ignored_vars = [
-        :source,
-        :strategy,
-        :logger,
-        :password
-      ]
-  
+      
       # build the json data
       json_data = {}
       variables.each do |k, v|
         begin
           # ignore ignored vars
-          next if ignored_vars.include?(k.to_sym)
+          next if IGNORED_CAP_VARS.include?(k.to_sym)
           
           # if the variable is callable, call it, so as to dereference it
           v = v.call if v.respond_to? :call
