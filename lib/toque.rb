@@ -20,6 +20,7 @@ module Toque
   class << self
     
     attr_reader :recipes
+    attr_reader :node_json
     
     # Register a recipe to be run
     # recipe names should be namespaced (eg: toque::database)
@@ -36,11 +37,13 @@ module Toque
       @recipes[recipe_name] = options
     end
 
-    def build_node_json(variables, run_list=nil)
+    # initialize the node json that we're going to use
+    # this is called to cache the node_json so we can modify it later
+    def init_node_json(variables)
       raise "Must supply capistrano variables. None given." if variables.nil?
       
       # build the json data
-      json_data = {}
+      @node_json = {}
       variables.each do |k, v|
         begin
           # ignore ignored vars
@@ -49,18 +52,19 @@ module Toque
           # if the variable is callable, call it, so as to dereference it
           v = v.call if v.respond_to? :call
     
-          json_data[k] = v
+          @node_json[k] = v
         rescue
           # do nothing.
         end
       end
-      
-      # set the run_list var unless it's nil
-      unless run_list.nil?
-        json_data[:run_list] = run_list
-      end
   
-      json_data
+      @node_json
+    end
+    
+    def json_for_runlist(runlist)
+      new_json = @node_json.dup
+      new_json[:run_list] = runlist
+      new_json
     end
     
     # returns the content of the solo configuration as a string

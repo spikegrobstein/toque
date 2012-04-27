@@ -15,14 +15,10 @@ Capistrano::Configuration.instance.load do
       
       upload_cookbooks
       
-      json_data = Toque::build_node_json(variables)
+      Toque::init_node_json(variables)
       
       Toque::recipes.each do |recipe, options|
-        server_json = json_data.dup
-        
-        server_json[:run_list] = [recipe]
-        
-        put server_json.to_json, "/tmp/#{ Toque::JSON_FILENAME }"
+        put Toque::json_for_runlist(recipe).to_json, "/tmp/#{ Toque::JSON_FILENAME }"
 
         sudo "chef-solo -c /tmp/#{ Toque::SOLO_CONFIG_FILENAME } -j /tmp/#{ Toque::JSON_FILENAME }", options
       end
@@ -35,7 +31,7 @@ Capistrano::Configuration.instance.load do
 
     desc "dumps the node json file and prints it to the screen using awesome_print"
     task :dry_run do
-      ap :node_json => Toque::build_node_json(variables)
+      ap :node_json => Toque::init_node_json(variables)
       ap :recipes => Toque::recipes
     end
   
