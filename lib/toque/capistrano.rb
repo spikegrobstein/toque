@@ -43,6 +43,11 @@ Capistrano::Configuration.instance.load do
     task :upload_cookbooks do
       @cleaned_up = false
       
+      # make sure that the local cookbook exists
+      unless File.exists?(cookbooks_path) && File.directory?(cookbooks_path)
+        raise "Local cookbooks directory does not exist. Please run the toque:init:cookbooks task."
+      end
+      
       # upload the cookbooks
       # if we fail to do that, it's probably because there are leftover cookbooks from a previous run
       # so try to delete them; if that fails, then raise and error.
@@ -51,7 +56,7 @@ Capistrano::Configuration.instance.load do
         upload cookbooks_path, '/tmp/cookbooks', :max_hosts => 4
       rescue
         raise "Failed to clean up cookbooks" if @cleaned_up
-        
+                
         puts "Previous toque run did not complete, cleaning up..."
         
         cleanup_cookbooks
