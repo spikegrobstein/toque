@@ -54,7 +54,7 @@ Capistrano::Configuration.instance.load do
       # so try to delete them; if that fails, then raise and error.
       begin
         # upload cookbooks
-        upload cookbooks_path, '/tmp/cookbooks', :max_hosts => 4
+        upload cookbooks_path, Toque::COOKBOOKS_PATH, :max_hosts => 4
       rescue
         raise "Failed to clean up cookbooks" if @cleaned_up
                 
@@ -67,11 +67,11 @@ Capistrano::Configuration.instance.load do
       end
       
       # generate the solo.rb file
-      put "file_cache_path '/var/chef-solo'\ncookbook_path '/tmp/cookbooks'", "/tmp/#{ Toque::SOLO_CONFIG_FILENAME }"
+      put Toque::solo_config, "/tmp/#{ Toque::SOLO_CONFIG_FILENAME }"
     end
     
     task :cleanup_cookbooks do
-      run "rm -rf /tmp/cookbooks /tmp/#{ Toque::SOLO_CONFIG_FILENAME } /tmp/#{ Toque::JSON_FILENAME } || true"
+      run "rm -rf #{ Toque::COOKBOOKS_PATH } /tmp/#{ Toque::SOLO_CONFIG_FILENAME } /tmp/#{ Toque::JSON_FILENAME } || true"
     end
 
     if ( exists?(:cookbook_repository) )

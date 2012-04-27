@@ -14,6 +14,9 @@ module Toque
   JSON_FILENAME = "node.json"
   SOLO_CONFIG_FILENAME = "solo.rb"
   
+  COOKBOOKS_PATH = '/tmp/cookbooks'
+  CHEF_CACHE = '/var/chef-solo'
+  
   class << self
     
     attr_reader :recipes
@@ -58,6 +61,15 @@ module Toque
       end
   
       json_data
+    end
+    
+    # returns the content of the solo configuration as a string
+    # this is used for writing solo.rb on the servers
+    def solo_config
+      <<-EOF
+        file_cache_path '#{ Toque::CHEF_CACHE }'
+        cookbook_path '#{ Toque::COOKBOOKS_PATH }'
+      EOF
     end
 
   end
