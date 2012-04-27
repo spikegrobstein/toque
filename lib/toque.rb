@@ -29,10 +29,6 @@ module Toque
       
       @recipes[recipe_name] = options
     end
-    
-    def execute_task(task_name)
-      Capistrano::Configuration.instance.find_and_execute_task task_name
-    end
 
     def build_node_json(variables, run_list=nil)
       raise "Must supply capistrano variables. None given." if variables.nil?
