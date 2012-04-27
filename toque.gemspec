@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.name        = "toque"
   s.version     = Toque::VERSION
   s.authors     = ["Spike Grobstein"]
-  s.email       = ["spike@ticketevolution.com"]
+  s.email       = ["spikegrobstein@mac.com"]
   s.homepage    = ""
   s.summary     = %q{ Easily configure your servers using Capistrano-powered Chef }
   s.description = %q{ Easily configure your servers using Capistrano-powered Chef }
