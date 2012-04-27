@@ -5,13 +5,13 @@ module Toque
   
   class << self
     
-    attr_reader :chef_recipes
+    attr_reader :recipes
     
     # Register a recipe to be run
     # recipe names should be namespaced (eg: toque::database)
     # options will be passed to the capistrano run() function
-    def chef_recipe(recipe_name, options={})
-      @chef_recipes ||= {}
+    def recipe(recipe_name, options={})
+      @recipes ||= {}
       
       # if recipe_name is a symbol
       # it's implicitely a toque recipe, so prefix that shit
@@ -19,7 +19,11 @@ module Toque
         recipe_name = "toque::#{recipe_name}"
       end
       
-      @chef_recipes[recipe_name] = options
+      @recipes[recipe_name] = options
+    end
+    
+    def execute_task(task_name)
+      Capistrano::Configuration.instance.find_and_execute_task task_name
     end
 
     def build_node_json(variables, run_list=nil)

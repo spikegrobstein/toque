@@ -23,7 +23,7 @@ Capistrano::Configuration.instance.load do
       
       json_data = Toque::build_node_json(variables)
       
-      Toque::chef_recipes.each do |recipe, options|
+      Toque::recipes.each do |recipe, options|
         server_json = json_data.dup
         
         server_json[:run_list] = [recipe]
