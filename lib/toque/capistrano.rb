@@ -13,13 +13,7 @@ Capistrano::Configuration.instance.load do
       # all chef stuff must use sudo
       set :user, admin_user
       
-      begin
-        upload_cookbooks
-      rescue
-        puts "Previous toque run did not complete, cleaning up..."
-        cleanup_cookbooks
-        retry
-      end
+      upload_cookbooks
       
       json_data = Toque::build_node_json(variables)
       
@@ -41,14 +35,30 @@ Capistrano::Configuration.instance.load do
 
     desc "dumps the node json file and prints it to the screen using awesome_print"
     task :dry_run do
-      ap :node => Toque::build_node_json(variables, Toque::chef_recipes.keys.split(','))
+      ap :node => Toque::build_node_json(variables, Toque::recipes.keys.split(','))
     end
   
     # push all chef configurations to server
     desc "[internal] Upload cookbooks to all configured servers."
     task :upload_cookbooks do
-      # upload cookbooks
-      upload cookbooks_path, '/tmp/cookbooks', :max_hosts => 4
+      @cleaned_up = false
+      
+      # upload the cookbooks
+      # if we fail to do that, it's probably because there are leftover cookbooks from a previous run
+      # so try to delete them; if that fails, then raise and error.
+      begin
+        # upload cookbooks
+        upload cookbooks_path, '/tmp/cookbooks', :max_hosts => 4
+      rescue
+        raise "Failed to clean up cookbooks" if @cleaned_up
+        
+        puts "Previous toque run did not complete, cleaning up..."
+        
+        cleanup_cookbooks
+        @cleaned_up = true
+        
+        retry
+      end
       
       # generate the solo.rb file
       put "file_cache_path '/var/chef-solo'\ncookbook_path '/tmp/cookbooks'", '/tmp/solo.rb'
