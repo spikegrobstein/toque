@@ -23,7 +23,7 @@ Capistrano::Configuration.instance.load do
         sudo "chef-solo -c /tmp/#{ Toque::SOLO_CONFIG_FILENAME } -j /tmp/#{ Toque::JSON_FILENAME }", options
       end
       
-      cleanup_cookbooks
+      cleanup_cookbooks unless fetch(:toque_no_cleanup, false)
       
       # reset the old user value
       set :user, old_user
