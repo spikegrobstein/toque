@@ -63,7 +63,8 @@ module Toque
     end
 
     def json_for_runlist(runlist)
-      new_json = @node_json.dup
+      new_json = {}
+      new_json[:cap] = @node_json.dup
       new_json[:run_list] = runlist
       new_json.to_json
     end
