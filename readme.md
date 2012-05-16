@@ -39,7 +39,7 @@ To get started with the `user` recipe, add the following to your capistrano `dep
     set :deploy_user, 'deploy'
 
     # register the 'toque::user' recipe with Toque
-    Toque::recipe 'toque::user'
+    recipe 'toque::user'
 
 That's it! If you run the `run_recipes` task, it will execute the `user` recipe on the server:
 
@@ -49,15 +49,15 @@ ALL capistrano variables are visible to your chef recipes under the 'cap' namesp
 
     node.cap[:shared_path]
 
-`Toque::recipe` takes the same options as `run` and recipes are run in the order that they are defined in the file. For instance, you would want the `toque::logrotate` recipe only on the `app` and `resque` roles, like as follows:
+`recipe` takes the same options as `run` and recipes are run in the order that they are defined in the file. For instance, you would want the `toque::logrotate` recipe only on the `app` and `resque` roles, like as follows:
 
-    Toque::recipe 'toque::logrotate', :roles => [ :app, :resque ]
+    recipe 'toque::logrotate', :roles => [ :app, :resque ]
 
 Toque comes with several built-in recipes installed under a `toque` cookbook when you run the `toque:init:cookbooks` task. Look at the recipe source to see additional variables that the recipes support and see how they work.
 
 Toque recipes can be registered by using a symbol without the `toque` namespace. For instance, the above example can be rewritten as the following:
 
-    Toque::recipe :logrotate, :roles => [ :app, :resque ]
+    recipe :logrotate, :roles => [ :app, :resque ]
 
 # Chef Server
 
@@ -72,7 +72,6 @@ This will add the `toque:chef_client` task, for executing `chef-client` on your 
 ## TODO
 
  * `before_recipe` and `after_recipe` hooks
- * `chef-server` support
  * don't require `toque:init:cookbooks` to use built-in `toque` recipes.
 
 ## Acknowledgements
