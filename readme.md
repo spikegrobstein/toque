@@ -45,7 +45,11 @@ That's it! If you run the `run_recipes` task, it will execute the `user` recipe 
 
     cap toque:run_recipes
 
-ALL capistrano variables are visible to your chef recipes. `Toque::recipe` takes the same options as `run` and recipes are run in the order that they are defined in the file. For instance, you would want the `toque::logrotate` recipe only on the `app` and `resque` roles, like as follows:
+ALL capistrano variables are visible to your chef recipes under the 'cap' namespace. This prevents collisions between cap variables and some built-in Chef attributes (eg: `domain`). For example, to access the `shared_path` Capistrano variable, you would do the following in your Chef recipe:
+
+    node.cap[:shared_path]
+
+`Toque::recipe` takes the same options as `run` and recipes are run in the order that they are defined in the file. For instance, you would want the `toque::logrotate` recipe only on the `app` and `resque` roles, like as follows:
 
     Toque::recipe 'toque::logrotate', :roles => [ :app, :resque ]
 
