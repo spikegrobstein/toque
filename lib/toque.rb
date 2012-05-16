@@ -2,7 +2,7 @@ require "toque/version"
 require 'json'
 
 module Toque
-  
+
   # variables that we will filter out before passing to recipes
   IGNORED_CAP_VARS = [
     :source,
@@ -10,30 +10,30 @@ module Toque
     :logger,
     :password
   ]
-  
+
   JSON_FILENAME = "node.json"
   SOLO_CONFIG_FILENAME = "solo.rb"
-  
+
   COOKBOOKS_PATH = '/tmp/cookbooks'
   CHEF_CACHE = '/var/chef-solo'
-  
+
   class << self
-    
+
     attr_reader :recipes
     attr_reader :node_json
-    
+
     # Register a recipe to be run
     # recipe names should be namespaced (eg: toque::database)
     # options will be passed to the capistrano run() function
     def recipe(recipe_name, options={})
       @recipes ||= {}
-      
+
       # if recipe_name is a symbol
       # it's implicitely a toque recipe, so prefix that shit
       if recipe_name.class == Symbol
         recipe_name = "toque::#{recipe_name}"
       end
-      
+
       @recipes[recipe_name] = options
     end
 
@@ -41,32 +41,32 @@ module Toque
     # this is called to cache the node_json so we can modify it later
     def init_node_json(variables)
       raise "Must supply capistrano variables. None given." if variables.nil?
-      
+
       # build the json data
       @node_json = {}
       variables.each do |k, v|
         begin
           # ignore ignored vars
           next if IGNORED_CAP_VARS.include?(k.to_sym)
-          
+
           # if the variable is callable, call it, so as to dereference it
           v = v.call if v.respond_to? :call
-    
+
           @node_json[k] = v
         rescue
           # do nothing.
         end
       end
-  
+
       @node_json
     end
-    
+
     def json_for_runlist(runlist)
       new_json = @node_json.dup
       new_json[:run_list] = runlist
       new_json.to_json
     end
-    
+
     # returns the content of the solo configuration as a string
     # this is used for writing solo.rb on the servers
     def solo_config
