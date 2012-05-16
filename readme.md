@@ -26,21 +26,21 @@ At this point, `cap` will have a couple of additional tasks available to it. Run
     Installing default cookbooks...
     $ git add cookbooks
     $ git commit
-    
+
 Out of the box, Toque provides support for configuring deploy users, resque workers and logrotate for your application. It bases the settings on capistrano variables.
 
 To get started with the `user` recipe, add the following to your capistrano `deploy.rb`:
 
     # admin_user is the user that recipes are run as and MUST have sudo
     set :admin_user, 'admin'
-    
+
     # deploy_user is the name of the user that the application will be run as.
     # Defaults to the 'user' value that you may have already set.
     set :deploy_user, 'deploy'
-    
+
     # register the 'toque::user' recipe with Toque
     Toque::recipe 'toque::user'
-    
+
 That's it! If you run the `run_recipes` task, it will execute the `user` recipe on the server:
 
     cap toque:run_recipes
@@ -54,7 +54,7 @@ Toque comes with several built-in recipes installed under a `toque` cookbook whe
 Toque recipes can be registered by using a symbol without the `toque` namespace. For instance, the above example can be rewritten as the following:
 
     Toque::recipe :logrotate, :roles => [ :app, :resque ]
-    
+
 ## TODO
 
  * `before_recipe` and `after_recipe` hooks
