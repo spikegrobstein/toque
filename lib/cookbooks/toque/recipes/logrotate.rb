@@ -11,10 +11,10 @@
 # TODO:
 # support custom logrotate rules?
 
-template "/etc/logrotate.d/#{ node.application.gsub(/\s+/, '_').downcase }" do
+template "/etc/logrotate.d/#{ node.cap.application.gsub(/\s+/, '_').downcase }" do
   source 'rails_log.conf.erb'
   mode '0644'
   variables({
-    :logs_path => "#{node.shared_path}/log"
+    :logs_path => "#{node.cap.shared_path}/log"
   })
 end
