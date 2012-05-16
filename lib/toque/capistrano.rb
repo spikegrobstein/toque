@@ -5,6 +5,10 @@ Capistrano::Configuration.instance.load do
   set(:cookbooks_path) { File.expand_path('./cookbooks') }
   set(:user) { fetch(:deploy_user, nil) }
 
+  def recipe( recipe_name, options )
+    Toque::recipe recipe_name, options
+  end
+
   namespace :toque do
 
     desc "Run all configured recipes"
