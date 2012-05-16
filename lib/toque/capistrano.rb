@@ -18,9 +18,9 @@ Capistrano::Configuration.instance.load do
       Toque::init_node_json(variables)
 
       Toque::recipes.each do |recipe, options|
-        put Toque::json_for_runlist(recipe), "/tmp/#{ Toque::JSON_FILENAME }"
+        put Toque::json_for_runlist(recipe), "#{ Toque::TMP_DIR }/#{ Toque::JSON_FILENAME }"
 
-        sudo "chef-solo -c /tmp/#{ Toque::SOLO_CONFIG_FILENAME } -j /tmp/#{ Toque::JSON_FILENAME }", options
+        sudo "chef-solo -c #{ Toque::TMP_DIR }/#{ Toque::SOLO_CONFIG_FILENAME } -j #{ Toque::TMP_DIR }/#{ Toque::JSON_FILENAME }", options
       end
 
       cleanup_cookbooks unless fetch(:toque_no_cleanup, false)
@@ -50,7 +50,8 @@ Capistrano::Configuration.instance.load do
       # so try to delete them; if that fails, then raise and error.
       begin
         # upload cookbooks
-        upload cookbooks_path, Toque::COOKBOOKS_PATH, :max_hosts => 4
+        run "mkdir -p #{ Toque::TMP_DIR }"
+        upload cookbooks_path, "#{ Toque::TMP_DIR }/#{ Toque::COOKBOOKS_DIR }", :max_hosts => 4
       rescue
         raise "Failed to clean up cookbooks" if @cleaned_up
 
@@ -63,11 +64,11 @@ Capistrano::Configuration.instance.load do
       end
 
       # generate the solo.rb file
-      put Toque::solo_config, "/tmp/#{ Toque::SOLO_CONFIG_FILENAME }"
+      put Toque::solo_config, "#{ Toque::TMP_DIR }/#{ Toque::SOLO_CONFIG_FILENAME }"
     end
 
     task :cleanup_cookbooks do
-      run "rm -rf #{ Toque::COOKBOOKS_PATH } /tmp/#{ Toque::SOLO_CONFIG_FILENAME } /tmp/#{ Toque::JSON_FILENAME } || true"
+      run "rm -rf #{ Toque::TMP_DIR } || true"
     end
 
     ## future feature

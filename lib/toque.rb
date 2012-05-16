@@ -11,10 +11,11 @@ module Toque
     :password
   ]
 
+  TMP_DIR = "/tmp/toque"
   JSON_FILENAME = "node.json"
   SOLO_CONFIG_FILENAME = "solo.rb"
+  COOKBOOKS_DIR = 'cookbooks'
 
-  COOKBOOKS_PATH = '/tmp/cookbooks'
   CHEF_CACHE = '/var/chef-solo'
 
   class << self
@@ -72,7 +73,7 @@ module Toque
     def solo_config
       <<-EOF
         file_cache_path '#{ Toque::CHEF_CACHE }'
-        cookbook_path '#{ Toque::COOKBOOKS_PATH }'
+        cookbook_path '#{ Toque::TMP_DIR }/#{ Toque::COOKBOOKS_DIR }'
       EOF
     end
 
