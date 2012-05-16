@@ -59,6 +59,16 @@ Toque recipes can be registered by using a symbol without the `toque` namespace.
 
     Toque::recipe :logrotate, :roles => [ :app, :resque ]
 
+# Chef Server
+
+For those of you running Chef Server, Toque also supports running `chef-client` on your nodes with the same ease as running a regular cap task. To enable access to these, just set the `:enable_chef_server` Capistrano variable to `true` as follows:
+
+    set :enable_chef_server, true
+
+This will add the `toque:chef_client` task, for executing `chef-client` on your nodes. Currently, this will be run with `sudo` and simultaneously on all nodes except where `:chef_client => false` is set. For example, to prevent `chef-client` from being run on your primary database server, you could do:
+
+    role :db, 'db001.example.com', :chef_client => false
+
 ## TODO
 
  * `before_recipe` and `after_recipe` hooks

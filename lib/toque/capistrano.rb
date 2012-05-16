@@ -71,6 +71,22 @@ Capistrano::Configuration.instance.load do
       run "rm -rf #{ Toque::TMP_DIR } || true"
     end
 
+    on :load do
+      # if :enable_chef_client is set to true, then enable this task
+      if ( fetch(:enable_chef_server, false) )
+        desc "Run chef-client on your nodes"
+        task :chef_client, :except => { :chef_client => false } do
+          old_user = user
+          # all chef stuff must use sudo
+          set :user, admin_user
+
+          run "#{ try_sudo } chef-client"
+
+          set :user, old_user
+        end
+      end
+    end
+
     ## future feature
     ## since toque uses local copies of the cookbooks,
     ## it would be nice if they were kept up to date in the event that the user
