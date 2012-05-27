@@ -38,4 +38,32 @@ describe Toque do
       Toque::recipes.keys.first.should == recipe_name
     end
   end
+
+  context "#init_node_json" do
+
+    it "should throw an exception if no variables are passed"
+
+    it "should throw an exception if it can't find the cookbooks directory"
+
+    it "should ignore all Toque::IGNORED_CAP_VARS"
+
+    it "should call any lambdas that are passed to it"
+
+  end
+
+  context "#json_for_runlist" do
+
+    it "should contain the node_json under the :cap namespace"
+
+    it "should contain the runlist"
+
+    it "should return parsable json"
+
+  end
+
+  context "#solo_config" do
+    it "should contain a configuration for 'file_cache_path'"
+
+    it "should contain a configuration for 'cookbook_path'"
+  end
 end
