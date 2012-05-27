@@ -29,6 +29,13 @@ describe Toque do
       Toque::recipes.keys.first.should == "toque::#{recipe_name}"
     end
 
-    it "should not namespace if there is no symbol"
+    it "should not namespace if there is no symbol" do
+      recipe_name = 'another_recipe'
+
+      Toque::recipe recipe_name
+
+      Toque::recipes.keys.count.should == 1
+      Toque::recipes.keys.first.should == recipe_name
+    end
   end
 end
