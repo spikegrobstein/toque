@@ -41,7 +41,9 @@ describe Toque do
 
   context "#init_node_json" do
 
-    it "should throw an exception if no variables are passed"
+    it "should throw an exception if no variables are passed" do
+      lambda { Toque::init_node_json(nil) }.should raise_error
+    end
 
     it "should throw an exception if it can't find the cookbooks directory"
 
