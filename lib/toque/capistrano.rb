@@ -9,8 +9,10 @@ module Capistrano
         set(:cookbooks_path) { File.expand_path('./cookbooks') }
         set(:user) { fetch(:deploy_user, nil) }
 
-        def recipe( recipe_name, options )
-          Toque::recipe recipe_name, options
+        unless defined?(recipe)
+          def recipe( recipe_name, options )
+            Toque::add_recipe recipe_name, options
+          end
         end
 
         namespace :toque do

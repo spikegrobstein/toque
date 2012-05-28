@@ -4,7 +4,7 @@ require 'toque'
 
 describe Toque do
 
-  context "#recipe" do
+  context "#add_recipe" do
 
     before do
       Toque::recipes.clear unless Toque::recipes.nil?
@@ -13,7 +13,7 @@ describe Toque do
     it "should add the recipe to the list of recipes" do
       recipe_name = 'some_recipe'
       recipe_options = { :roles => 'app' }
-      Toque::recipe recipe_name, recipe_options
+      Toque::add_recipe recipe_name, recipe_options
 
       Toque::recipes.keys.count.should == 1
       Toque::recipes.keys.first.should == recipe_name
@@ -23,7 +23,7 @@ describe Toque do
     it "should properly namespace symbols" do
       recipe_name = :another_recipe
 
-      Toque::recipe recipe_name
+      Toque::add_recipe recipe_name
 
       Toque::recipes.keys.count.should == 1
       Toque::recipes.keys.first.should == "toque::#{recipe_name}"
@@ -32,7 +32,7 @@ describe Toque do
     it "should not namespace if there is no symbol" do
       recipe_name = 'another_recipe'
 
-      Toque::recipe recipe_name
+      Toque::add_recipe recipe_name
 
       Toque::recipes.keys.count.should == 1
       Toque::recipes.keys.first.should == recipe_name

@@ -26,7 +26,7 @@ module Toque
     # Register a recipe to be run
     # recipe names should be namespaced (eg: toque::database)
     # options will be passed to the capistrano run() function
-    def recipe(recipe_name, options={})
+    def add_recipe(recipe_name, options={})
       @recipes ||= {}
 
       # if recipe_name is a symbol
