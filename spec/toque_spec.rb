@@ -45,11 +45,43 @@ describe Toque do
       lambda { Toque::init_node_json(nil) }.should raise_error
     end
 
-    it "should throw an exception if it can't find the cookbooks directory"
+    context "ignoring cap variables" do
 
-    it "should ignore all Toque::IGNORED_CAP_VARS"
+      it "should ignore all Toque::IGNORED_CAP_VARS" do
+        vars = {
+          :application => 'some_application',
+          :source => 'this should be ignored',
+          :strategy => 'this should be ignored',
+          :logger => 'this should be ignored',
+          :password => 'this should be ignored'
+        }
 
-    it "should call any lambdas that are passed to it"
+        node_json = Toque::init_node_json(vars)
+
+        Toque::IGNORED_CAP_VARS.each do |k|
+          node_json[k].should be_nil
+        end
+
+        node_json[:application].should_not be_nil
+      end
+
+    end
+
+    it "should call any lambdas that are passed to it" do
+      callable = mock(:call => true)
+
+      callable.should_receive(:call).and_return('asdf')
+      Toque::init_node_json(:callable => callable)
+    end
+
+    it "should not call non-callable vars" do
+      variable = "just a normal var"
+
+      variable.should_receive(:respond_to?).with(:call).and_return(false)
+      variable.should_not_receive(:call)
+
+      Toque::init_node_json(:some_var => variable)
+    end
 
   end
 
@@ -64,8 +96,14 @@ describe Toque do
   end
 
   context "#solo_config" do
-    it "should contain a configuration for 'file_cache_path'"
+    let(:solo_config) { Toque::solo_config }
 
-    it "should contain a configuration for 'cookbook_path'"
+    it "should contain a configuration for 'file_cache_path'" do
+      Toque::solo_config.should =~ %r{^\s*file_cache_path\s+}
+    end
+
+    it "should contain a configuration for 'cookbook_path'" do
+      Toque::solo_config.should =~ %r{^\s*cookbook_path\s+}
+    end
   end
 end
