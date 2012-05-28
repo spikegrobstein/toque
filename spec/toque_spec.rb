@@ -86,12 +86,33 @@ describe Toque do
   end
 
   context "#json_for_runlist" do
+    let(:cap_variables) do
+      {
+        "application" => 'Toque Test App',
+        "another_var" => 'some random variable',
+        "cool_var" => true
+      }
+    end
 
-    it "should contain the node_json under the :cap namespace"
+    let(:run_list) { [ 'toque::user', 'toque::resque', 'myapp::crons' ]}
 
-    it "should contain the runlist"
+    let(:run_list_hash) { JSON.parse(Toque::json_for_runlist(run_list)) }
 
-    it "should return parsable json"
+    before do
+      Toque::init_node_json(cap_variables)
+    end
+
+    it "should return parsable json" do
+      lambda { run_list_hash }.should_not raise_error
+    end
+
+    it "should contain the node_json under the :cap namespace" do
+      run_list_hash['cap'].should == cap_variables
+    end
+
+    it "should contain the runlist" do
+      run_list_hash['run_list'].should == run_list
+    end
 
   end
 
