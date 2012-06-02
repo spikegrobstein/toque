@@ -73,6 +73,10 @@ This will add the `toque:chef_client` task, for executing `chef-client` on your 
 
  * `before_recipe` and `after_recipe` hooks
  * don't require `toque:init:cookbooks` to use built-in `toque` recipes.
+ * recipe plugin system, so you can add recipes by just loading new gems
+ * `chef-client` support for Chef Server infrastructures
+ * optimized running of recipes (run all required recipes on a given server at the same time)
+ * sequential running across servers in a role with a timeout
 
 ## Acknowledgements
 
