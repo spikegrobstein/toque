@@ -23,6 +23,8 @@ module Toque
     attr_reader :recipes
     attr_reader :node_json
 
+    attr_reader :cookbooks
+
     # Register a recipe to be run
     # recipe names should be namespaced (eg: toque::database)
     # options will be passed to the capistrano run() function
@@ -76,6 +78,10 @@ module Toque
         file_cache_path '#{ Toque::CHEF_CACHE }'
         cookbook_path '#{ Toque::TMP_DIR }/#{ Toque::COOKBOOKS_DIR }'
       EOF
+    end
+
+    def build_cookbooks
+
     end
 
   end

@@ -39,6 +39,28 @@ describe Toque do
     end
   end
 
+  context "::cookbooks" do
+
+    context "::add_cookbook" do
+
+      it "should add a cookbook to the @cookbooks array" do
+        lambda { Toque::add_cookbook('asdf') }.should change(Toque::cookbooks.count).by exactly(1)
+      end
+
+    end
+
+    context "::build_cookbooks" do
+
+      it "should get all the cookbooks from the gem itself"
+
+      it "should read cookbooks in the application's directory"
+
+      it "should combine the cookbooks into one cookbooks directory"
+
+    end
+
+  end
+
   context "#init_node_json" do
 
     it "should throw an exception if no variables are passed" do
