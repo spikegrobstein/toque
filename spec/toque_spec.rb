@@ -45,7 +45,13 @@ describe Toque do
     context "::add_cookbook" do
 
       it "should add a cookbook to the @cookbooks array" do
-        lambda { toque.add_cookbook('asdf') }.should change(toque.cookbooks.count).by exactly(1)
+        File.stub(:exists? => true)
+        lambda { toque.add_cookbook('asdf') }.should change { toque.cookbooks.count }.by(1)
+      end
+
+      it "should raise an error if the added cookbook does not exist" do
+        File.stub(:exists? => false)
+        lambda { toque.add_cookbook('asdf') }.should raise_error
       end
 
     end

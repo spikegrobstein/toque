@@ -42,6 +42,11 @@ class Toque
     @recipes[recipe_name] = options
   end
 
+  def add_cookbook(cookbook_path)
+    raise "Cookbook directory not found: #{ cookbook_path }" unless File.exists?(cookbook_path)
+    @cookbooks << cookbook_path
+  end
+
   # initialize the node json that we're going to use
   # this is called to cache the node_json so we can modify it later
   def init_node_json(variables)
