@@ -1,8 +1,0 @@
-pre-start script
-
-bash << "EOF"
-  mkdir -p <%= @shared_path %>/log
-  chown -R <%= @deploy_user %> <%= @shared_path %>/log
-EOF
-
-end script

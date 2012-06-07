@@ -54,13 +54,19 @@ describe Toque do
         lambda { toque.add_cookbook('asdf') }.should raise_error
       end
 
+      it "should accept :default as a symbol and add the gem's cookbooks" do
+        toque.should_receive(:default_cookbook_path)
+
+        toque.add_cookbook :default
+
+        toque.cookbooks.last.should == toque.send(:default_cookbook_path)
+      end
+
     end
 
     context "::build_cookbooks" do
 
       it "should get all the cookbooks from the gem itself"
-
-      it "should read cookbooks in the application's directory"
 
       it "should combine the cookbooks into one cookbooks directory"
 

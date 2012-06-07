@@ -43,7 +43,14 @@ class Toque
   end
 
   def add_cookbook(cookbook_path)
+    debugger
+    if cookbook_path == :default
+      add_cookbook default_cookbook_path
+      return
+    end
+
     raise "Cookbook directory not found: #{ cookbook_path }" unless File.exists?(cookbook_path)
+
     @cookbooks << cookbook_path
   end
 
@@ -87,7 +94,8 @@ class Toque
     EOF
   end
 
-  def build_cookbooks
-
+  def default_cookbook_path
+    File.expand_path( File.join( File.dirname(__FILE__), '../cookbooks' ) )
   end
+
 end
