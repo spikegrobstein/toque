@@ -55,7 +55,8 @@ describe Toque do
       end
 
       it "should accept :default as a symbol and add the gem's cookbooks" do
-        toque.should_receive(:default_cookbook_path)
+        toque.should_receive(:default_cookbook_path).exactly(:twice).and_return('asdf')
+        File.stub(:exists? => true)
 
         toque.add_cookbook :default
 
