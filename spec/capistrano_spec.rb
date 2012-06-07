@@ -1,13 +1,35 @@
 require 'capistrano'
+require 'awesome_print'
 
 require File.dirname(__FILE__) + '/../lib/toque/capistrano'
 
 describe Capistrano::Toque do
   let (:config) { Capistrano::Configuration.new }
 
+  let(:admin_user) { 'administrator' }
+
+  before do
+    Capistrano::Toque.load_into(config)
+  end
+
   context "toque:run_recipes" do
 
-    it "should set the user to the admin user"
+    it "should set the user to the admin user" do
+      config.set(:admin_user, admin_user)
+
+      config.should_receive(:set).with(:user, admin_user)
+      config.should_receive(:toque_check_cookbooks).and_return(true)
+
+      t = config.find_task('toque:upload_cookbooks')
+      ap t
+      t.instance_eval do
+        @block.should_receive(:call).and_return(false)
+      end
+
+      #ap config.find_task('toque:upload_cookbooks')
+
+      config.find_and_execute_task('toque:run_recipes')
+    end
 
     it "should upload the cookbooks"
 
