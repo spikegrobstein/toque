@@ -3,39 +3,40 @@ $: << File.join( File.dirname(__FILE__), '/../lib' )
 require 'toque'
 
 describe Toque do
+  let(:toque) { Toque.new }
 
   context "#add_recipe" do
 
     before do
-      Toque::recipes.clear unless Toque::recipes.nil?
+      toque.recipes.clear unless toque.recipes.nil?
     end
 
     it "should add the recipe to the list of recipes" do
       recipe_name = 'some_recipe'
       recipe_options = { :roles => 'app' }
-      Toque::add_recipe recipe_name, recipe_options
+      toque.add_recipe recipe_name, recipe_options
 
-      Toque::recipes.keys.count.should == 1
-      Toque::recipes.keys.first.should == recipe_name
-      Toque::recipes[recipe_name].should == recipe_options
+      toque.recipes.keys.count.should == 1
+      toque.recipes.keys.first.should == recipe_name
+      toque.recipes[recipe_name].should == recipe_options
     end
 
     it "should properly namespace symbols" do
       recipe_name = :another_recipe
 
-      Toque::add_recipe recipe_name
+      toque.add_recipe recipe_name
 
-      Toque::recipes.keys.count.should == 1
-      Toque::recipes.keys.first.should == "toque::#{recipe_name}"
+      toque.recipes.keys.count.should == 1
+      toque.recipes.keys.first.should == "toque::#{recipe_name}"
     end
 
     it "should not namespace if there is no symbol" do
       recipe_name = 'another_recipe'
 
-      Toque::add_recipe recipe_name
+      toque.add_recipe recipe_name
 
-      Toque::recipes.keys.count.should == 1
-      Toque::recipes.keys.first.should == recipe_name
+      toque.recipes.keys.count.should == 1
+      toque.recipes.keys.first.should == recipe_name
     end
   end
 
@@ -44,7 +45,7 @@ describe Toque do
     context "::add_cookbook" do
 
       it "should add a cookbook to the @cookbooks array" do
-        lambda { Toque::add_cookbook('asdf') }.should change(Toque::cookbooks.count).by exactly(1)
+        lambda { toque.add_cookbook('asdf') }.should change(toque.cookbooks.count).by exactly(1)
       end
 
     end
@@ -64,7 +65,7 @@ describe Toque do
   context "#init_node_json" do
 
     it "should throw an exception if no variables are passed" do
-      lambda { Toque::init_node_json(nil) }.should raise_error
+      lambda { toque.init_node_json(nil) }.should raise_error
     end
 
     context "ignoring cap variables" do
@@ -78,7 +79,7 @@ describe Toque do
           :password => 'this should be ignored'
         }
 
-        node_json = Toque::init_node_json(vars)
+        node_json = toque.init_node_json(vars)
 
         Toque::IGNORED_CAP_VARS.each do |k|
           node_json[k].should be_nil
@@ -93,7 +94,7 @@ describe Toque do
       callable = mock(:call => true)
 
       callable.should_receive(:call).and_return('asdf')
-      Toque::init_node_json(:callable => callable)
+      toque.init_node_json(:callable => callable)
     end
 
     it "should not call non-callable vars" do
@@ -102,7 +103,7 @@ describe Toque do
       variable.should_receive(:respond_to?).with(:call).and_return(false)
       variable.should_not_receive(:call)
 
-      Toque::init_node_json(:some_var => variable)
+      toque.init_node_json(:some_var => variable)
     end
 
   end
@@ -118,10 +119,10 @@ describe Toque do
 
     let(:run_list) { [ 'toque::user', 'toque::resque', 'myapp::crons' ]}
 
-    let(:run_list_hash) { JSON.parse(Toque::json_for_runlist(run_list)) }
+    let(:run_list_hash) { JSON.parse(toque.json_for_runlist(run_list)) }
 
     before do
-      Toque::init_node_json(cap_variables)
+      toque.init_node_json(cap_variables)
     end
 
     it "should return parsable json" do
@@ -139,14 +140,14 @@ describe Toque do
   end
 
   context "#solo_config" do
-    let(:solo_config) { Toque::solo_config }
+    let(:solo_config) { toque.solo_config }
 
     it "should contain a configuration for 'file_cache_path'" do
-      Toque::solo_config.should =~ %r{^\s*file_cache_path\s+}
+      toque.solo_config.should =~ %r{^\s*file_cache_path\s+}
     end
 
     it "should contain a configuration for 'cookbook_path'" do
-      Toque::solo_config.should =~ %r{^\s*cookbook_path\s+}
+      toque.solo_config.should =~ %r{^\s*cookbook_path\s+}
     end
   end
 end
