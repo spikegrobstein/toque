@@ -1,6 +1,9 @@
 require "toque/version"
 require 'json'
 
+require 'tmpdir'
+require 'fileutils'
+
 class Toque
 
   # variables that we will filter out before passing to recipes
@@ -96,6 +99,12 @@ class Toque
 
   def default_cookbook_path
     File.expand_path( File.join( File.dirname(__FILE__), '../cookbooks' ) )
+  end
+
+  def build_cookbooks
+    tmpdir = Dir.mktmpdir('toque_cookbooks')
+
+    FileUtils.cp_r @cookbooks, tmpdir
   end
 
 end

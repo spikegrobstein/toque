@@ -67,9 +67,17 @@ describe Toque do
 
     context "::build_cookbooks" do
 
-      it "should get all the cookbooks from the gem itself"
+      after do
+        toque.build_cookbooks
+      end
 
-      it "should combine the cookbooks into one cookbooks directory"
+      it "should create a cookbooks temp directory" do
+        Dir.should_receive(:mktmpdir).and_return('/tmp/toque_cookbook_test_dir')
+      end
+
+      it "should copy the cookbooks into one cookbooks directory" do
+        FileUtils.should_receive(:cp_r)
+      end
 
     end
 
