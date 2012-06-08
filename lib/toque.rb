@@ -51,7 +51,6 @@ class Toque
   # all registered cookbooks will be uploaded to the server together
   # you can pass :default to this if you want to upload the built-in cookbooks
   def add_cookbook(cookbook_path)
-    debugger
     if cookbook_path == :default
       add_cookbook default_cookbook_path
       return
