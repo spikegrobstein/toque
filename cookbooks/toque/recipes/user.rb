@@ -13,8 +13,6 @@
 # * authorized_keys -- an array of public keys to add to the user's authorized_keys2 file
 
 # TODO: yet to implement:
-# uid
-# gid
 # github private deploy key - key for deploying the application with ssh config file
 # groups for this user to belong to
 # base template configuration for ssh config
@@ -26,6 +24,8 @@ user node.cap.deploy_user do
   action :create
   shell     node.cap[:deploy_user_shell]    || '/bin/bash'
   home      home_path
+  uid       node.cap[:deploy_user_uid]      if node.cap.attribute?(:deploy_user_uid)
+  gid       node.cap[:deploy_user_gid]      if node.cap.attribute?(:deploy_user_gid)
   comment   node.cap[:deploy_user_comment]  || "deploy user for #{ node.cap.application }"
   supports  :manage_home => true
 end
