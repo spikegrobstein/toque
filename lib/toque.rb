@@ -134,6 +134,7 @@ class Toque
 
   # gathers all registered cookbooks into a new temp directory
   def build_cookbooks
+    raise "No cookbooks have been registered" if cookbooks.count == 0
     @tmpdir ||= Dir.mktmpdir('toque_cookbooks')
 
     FileUtils.cp_r @cookbooks, @tmpdir

@@ -76,15 +76,26 @@ describe Toque do
     context "::build_cookbooks" do
 
       after do
-        toque.build_cookbooks
+      end
+
+      it "should raise an error if there are no registered cookbooks" do
+        toque.stub(:cookbooks => [])
+
+        lambda { toque.build_cookbooks }.should raise_error
       end
 
       it "should create a cookbooks temp directory" do
+        toque.stub(:cookbooks => ['asdf'])
         Dir.should_receive(:mktmpdir).and_return('/tmp/toque_cookbook_test_dir')
+
+        toque.build_cookbooks
       end
 
       it "should copy the cookbooks into one cookbooks directory" do
+        toque.stub(:cookbooks => ['asdf'])
         FileUtils.should_receive(:cp_r)
+
+        toque.build_cookbooks
       end
 
     end
