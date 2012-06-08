@@ -47,6 +47,9 @@ class Toque
     @recipes[recipe_name] = options
   end
 
+  # register a cookbook with Toque
+  # all registered cookbooks will be uploaded to the server together
+  # you can pass :default to this if you want to upload the built-in cookbooks
   def add_cookbook(cookbook_path)
     debugger
     if cookbook_path == :default
@@ -63,6 +66,8 @@ class Toque
     @cookbooks << cookbook_path
   end
 
+  # returns whether the given cookbook path exists
+  # this is used to ensure that cookbooks with duplicate basenames aren't added
   def cookbook_exists?(cookbook_path)
     cb_name = File.basename(cookbook_path)
 
@@ -71,6 +76,15 @@ class Toque
     end
 
     false
+  end
+
+  # copy the builtin cookbooks to the supplied path
+  # this is useful if you want to modify the existing cookbook/recipes
+  # the capistrano recipe should not add_cookbook :default in this case.
+  def copy_builtin_cookbooks(cookbook_path)
+    raise "Cookbook directory already exists: #{ cookbook_path }" if File.exists?(cookbook_path) or !File.directory?(File.dirname(cookbook_path))
+
+    FileUtils.cp_r default_cookbook_path, cookbook_path
   end
 
   # initialize the node json that we're going to use
@@ -113,10 +127,12 @@ class Toque
     EOF
   end
 
+  # returns the path to the builtin cookbooks
   def default_cookbook_path
     File.expand_path( File.join( File.dirname(__FILE__), '../cookbooks' ) )
   end
 
+  # gathers all registered cookbooks into a new temp directory
   def build_cookbooks
     @tmpdir ||= Dir.mktmpdir('toque_cookbooks')
 
@@ -125,6 +141,7 @@ class Toque
     @tmpdir
   end
 
+  # delete the temp cookbook directory created by Toque#build_cookbooks
   def clean_up
     return if tmpdir.nil?
     return unless File.exists?(tmpdir)
