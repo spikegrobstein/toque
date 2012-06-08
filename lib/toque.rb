@@ -52,9 +52,23 @@ class Toque
       return
     end
 
+    # make sure the cookbook directory exists when trying to add it
     raise "Cookbook directory not found: #{ cookbook_path }" unless File.exists?(cookbook_path)
 
+    # don't allow duplicate cookbook names
+    raise "Cookbook with duplicate name added: #{ cookbook_path }" if cookbook_exists?(cookbook_path)
+
     @cookbooks << cookbook_path
+  end
+
+  def cookbook_exists?(cookbook_path)
+    cb_name = File.basename(cookbook_path)
+
+    @cookbooks.each do |c|
+      return true if File.basename(c) == cb_name
+    end
+
+    false
   end
 
   # initialize the node json that we're going to use
@@ -105,6 +119,8 @@ class Toque
     tmpdir = Dir.mktmpdir('toque_cookbooks')
 
     FileUtils.cp_r @cookbooks, tmpdir
+
+    tmpdir
   end
 
 end

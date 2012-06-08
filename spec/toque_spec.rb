@@ -63,6 +63,14 @@ describe Toque do
         toque.cookbooks.last.should == toque.send(:default_cookbook_path)
       end
 
+      it "should raise an error if 2 cookbooks with the same basename are added" do
+        File.stub(:exists? => true)
+
+        lambda { toque.add_cookbook 'asdf' }.should_not raise_error
+        lambda { toque.add_cookbook 'qwer' }.should_not raise_error
+        lambda { toque.add_cookbook 'asdf' }.should raise_error
+      end
+
     end
 
     context "::build_cookbooks" do
