@@ -10,10 +10,12 @@
 # * deploy_user_shell -- the shell for the deploy user
 # * deploy_user_home -- the path to the home directory for the deploy user
 # * deploy_user_comment -- the GECOS comment field for the deploy user
+# * deploy_user_gid -- the GID to use for the user account
+# * deploy_user_uid -- the UID to use for the user account
 # * authorized_keys -- an array of public keys to add to the user's authorized_keys2 file
+# * deploy_key -- the github private deploy key. This will also write an ssh config file to use that key for connecting to github.com
 
 # TODO: yet to implement:
-# github private deploy key - key for deploying the application with ssh config file
 # groups for this user to belong to
 # base template configuration for ssh config
 
