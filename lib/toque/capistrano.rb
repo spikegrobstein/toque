@@ -13,6 +13,10 @@ module Capistrano
           set :toque, Toque.new
         end
 
+        on :start do
+          toque.init_node_json(variables)
+        end
+
         unless defined?(recipe)
           def recipe( recipe_name, options )
             toque.add_recipe recipe_name, options
@@ -28,8 +32,6 @@ module Capistrano
             set :user, admin_user
 
             upload_cookbooks
-
-            toque.init_node_json(variables)
 
             toque.recipes.each do |recipe, options|
               put toque.json_for_runlist(recipe), "#{ Toque::TMP_DIR }/#{ Toque::JSON_FILENAME }"
