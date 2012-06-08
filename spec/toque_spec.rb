@@ -40,9 +40,9 @@ describe Toque do
     end
   end
 
-  context "::cookbooks" do
+  context "cookbooks" do
 
-    context "::add_cookbook" do
+    context "#add_cookbook" do
 
       it "should add a cookbook to the @cookbooks array" do
         File.stub(:exists? => true)
@@ -73,7 +73,7 @@ describe Toque do
 
     end
 
-    context "::build_cookbooks" do
+    context "#build_cookbooks" do
 
       after do
       end
