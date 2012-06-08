@@ -24,7 +24,7 @@ Capistrano::Configuration.instance.load do
     end
   end
 
-  on :start do
+  before 'chef:run_recipes' do
     toque.init_node_json(variables)
   end
 
