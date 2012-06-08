@@ -75,6 +75,7 @@ Capistrano::Configuration.instance.load do
       @cleaned_up = false
 
       cookbooks_path = toque.build_cookbooks
+      puts "built cookbooks path: #{ cookbooks_path }"
 
       # upload the cookbooks
       # if we fail to do that, it's probably because there are leftover cookbooks from a previous run
@@ -82,7 +83,7 @@ Capistrano::Configuration.instance.load do
       begin
         # upload cookbooks
         run "mkdir -p #{ Toque::TMP_DIR }"
-        upload cookbooks_path, "#{ Toque::TMP_DIR }/#{ Toque::COOKBOOKS_DIR }", :max_hosts => 4
+        upload "#{ cookbooks_path }/cookbooks", "#{ Toque::TMP_DIR }/#{ Toque::COOKBOOKS_DIR }", :max_hosts => 4
       rescue
         raise "Failed to clean up cookbooks" if @cleaned_up
 
