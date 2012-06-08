@@ -37,7 +37,7 @@ module Capistrano
           end
         end
 
-        unless definde?(cookbook)
+        unless defined?(cookbook)
           def cookbook( cookbook_path )
             toque.add_cookbook cookbook_path
           end
