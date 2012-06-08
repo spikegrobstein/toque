@@ -37,6 +37,12 @@ module Capistrano
           end
         end
 
+        unless definde?(cookbook)
+          def cookbook( cookbook_path )
+            toque.add_cookbook cookbook_path
+          end
+        end
+
         namespace :toque do
 
           desc "Run all configured recipes"
