@@ -20,12 +20,14 @@ Getting started using Toque is very easy. First, require it in your `Capfile` be
 
     require 'toque/capistrano'
 
-At this point, `cap` will have a couple of additional tasks available to it. Run the `toque:init:cookbooks` task to install the `toque` cookbook and recipes into your project. These should be added to your repository. For example:
+Toque comes with several built-in recipes. They are all in the `toque` cookbook and can be registered with toque with the following code:
 
-    $ cap toque:init:cookbooks
-    Installing default cookbooks...
-    $ git add cookbooks
-    $ git commit
+    cookbook :default
+
+Additional cookbook paths can be registered with the `cookbook` function and passing the full path to the cookbook. For example:
+
+    # example custom cookbook:
+    cookbook 'cookbooks/myapp'
 
 Out of the box, Toque provides support for configuring deploy users, resque workers and logrotate for your application. It bases the settings on capistrano variables.
 
@@ -43,7 +45,7 @@ To get started with the `user` recipe, add the following to your capistrano `dep
 
 That's it! If you run the `run_recipes` task, it will execute the `user` recipe on the server:
 
-    cap toque:run_recipes
+    cap chef:run_recipes
 
 ALL capistrano variables are visible to your chef recipes under the 'cap' namespace. This prevents collisions between cap variables and some built-in Chef attributes (eg: `domain`). For example, to access the `shared_path` Capistrano variable, you would do the following in your Chef recipe:
 
@@ -52,8 +54,6 @@ ALL capistrano variables are visible to your chef recipes under the 'cap' namesp
 `recipe` takes the same options as `run` and recipes are run in the order that they are defined in the file. For instance, you would want the `toque::logrotate` recipe only on the `app` and `resque` roles, like as follows:
 
     recipe 'toque::logrotate', :roles => [ :app, :resque ]
-
-Toque comes with several built-in recipes installed under a `toque` cookbook when you run the `toque:init:cookbooks` task. Look at the recipe source to see additional variables that the recipes support and see how they work.
 
 Toque recipes can be registered by using a symbol without the `toque` namespace. For instance, the above example can be rewritten as the following:
 
