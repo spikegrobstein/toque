@@ -91,6 +91,28 @@ describe Toque do
 
   end
 
+  context "#clean_up" do
+
+    before do
+      toque.stub(:tmpdir => 'asdf')
+    end
+
+    after do
+      toque.clean_up
+    end
+
+    it "should delete the temp cookbooks if they exist" do
+      File.stub(:exists? => true)
+      FileUtils.should_receive(:rm_rf)
+    end
+
+    it "should not delete the temp cookbooks if they don't exist" do
+      File.stub(:exists? => false)
+      FileUtils.should_not_receive(:rm_rf)
+    end
+
+  end
+
   context "#init_node_json" do
 
     it "should throw an exception if no variables are passed" do

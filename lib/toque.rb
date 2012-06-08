@@ -27,6 +27,8 @@ class Toque
 
   attr_reader :cookbooks
 
+  attr_reader :tmpdir
+
   def initialize
     @recipes = {}
     @cookbooks = []
@@ -116,11 +118,18 @@ class Toque
   end
 
   def build_cookbooks
-    tmpdir = Dir.mktmpdir('toque_cookbooks')
+    @tmpdir ||= Dir.mktmpdir('toque_cookbooks')
 
-    FileUtils.cp_r @cookbooks, tmpdir
+    FileUtils.cp_r @cookbooks, @tmpdir
 
-    tmpdir
+    @tmpdir
+  end
+
+  def clean_up
+    return if tmpdir.nil?
+    return unless File.exists?(tmpdir)
+
+    FileUtils.rm_rf tmpdir
   end
 
 end
