@@ -12,7 +12,7 @@ Use Capistrano to define variables and make them visible to your chef recipes.
 
 Assumes that machines are ready to go for chef-solo, at the moment.
 
-Very much a work in progress.
+Very much a work in progress. Be wary of using in production as each release may drastically change the interfaces, names of functions and behavior of the application. You have been warned.
 
 # Quick Start
 
