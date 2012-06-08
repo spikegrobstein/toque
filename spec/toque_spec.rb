@@ -75,9 +75,6 @@ describe Toque do
 
     context "#build_cookbooks" do
 
-      after do
-      end
-
       it "should raise an error if there are no registered cookbooks" do
         toque.stub(:cookbooks => [])
 
