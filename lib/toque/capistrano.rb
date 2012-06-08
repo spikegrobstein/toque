@@ -47,7 +47,7 @@ module Capistrano
 
           desc "dumps the node json file and prints it to the screen using awesome_print"
           task :dry_run do
-            ap :node_json => toque.init_node_json(variables)
+            ap :node_json => toque.node_json
             ap :cookbooks => toque.cookbooks
             ap :recipes => toque.recipes
           end
