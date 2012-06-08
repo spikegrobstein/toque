@@ -8,9 +8,14 @@ module Capistrano
       config.load do
         set(:user) { fetch(:deploy_user, nil) }
 
+        # initialize the toque object
+        on :load do
+          set :toque, Toque.new
+        end
+
         unless defined?(recipe)
           def recipe( recipe_name, options )
-            Toque::add_recipe recipe_name, options
+            toque.add_recipe recipe_name, options
           end
         end
 
@@ -24,10 +29,10 @@ module Capistrano
 
             upload_cookbooks
 
-            Toque::init_node_json(variables)
+            toque.init_node_json(variables)
 
-            Toque::recipes.each do |recipe, options|
-              put Toque::json_for_runlist(recipe), "#{ Toque::TMP_DIR }/#{ Toque::JSON_FILENAME }"
+            toque.recipes.each do |recipe, options|
+              put toque.json_for_runlist(recipe), "#{ Toque::TMP_DIR }/#{ Toque::JSON_FILENAME }"
 
               sudo "chef-solo -c #{ Toque::TMP_DIR }/#{ Toque::SOLO_CONFIG_FILENAME } -j #{ Toque::TMP_DIR }/#{ Toque::JSON_FILENAME }", options
             end
@@ -40,8 +45,9 @@ module Capistrano
 
           desc "dumps the node json file and prints it to the screen using awesome_print"
           task :dry_run do
-            ap :node_json => Toque::init_node_json(variables)
-            ap :recipes => Toque::recipes
+            ap :node_json => toque.init_node_json(variables)
+            ap :cookbooks => toque.cookbooks
+            ap :recipes => toque.recipes
           end
 
           # push all chef configurations to server
@@ -49,10 +55,7 @@ module Capistrano
           task :upload_cookbooks do
             @cleaned_up = false
 
-            # make sure that the local cookbook exists
-            unless File.exists?(cookbooks_path) && File.directory?(cookbooks_path)
-              raise "Local cookbooks directory does not exist. Please run the toque:init:cookbooks task."
-            end
+            cookbooks_path = toque.build_cookbooks
 
             # upload the cookbooks
             # if we fail to do that, it's probably because there are leftover cookbooks from a previous run
@@ -73,7 +76,7 @@ module Capistrano
             end
 
             # generate the solo.rb file
-            put Toque::solo_config, "#{ Toque::TMP_DIR }/#{ Toque::SOLO_CONFIG_FILENAME }"
+            put toque.solo_config, "#{ Toque::TMP_DIR }/#{ Toque::SOLO_CONFIG_FILENAME }"
           end
 
           task :cleanup_cookbooks do
