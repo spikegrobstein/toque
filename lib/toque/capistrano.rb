@@ -6,7 +6,6 @@ module Capistrano
 
     def self.load_into(config)
       config.load do
-        set(:cookbooks_path) { File.expand_path('./cookbooks') }
         set(:user) { fetch(:deploy_user, nil) }
 
         unless defined?(recipe)

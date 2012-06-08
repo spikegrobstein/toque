@@ -89,6 +89,25 @@ describe Toque do
 
     end
 
+    context "#copy_builtin_cookbooks" do
+
+      it "should copy the built-in cookbooks" do
+        File.stub(:exists? => false)
+        File.stub(:directory? => true)
+        FileUtils.should_receive(:cp_r)
+
+        toque.copy_builtin_cookbooks('asdf')
+      end
+
+      it "should raise an error if the destination already exists" do
+        File.stub(:exists? => true)
+        File.stub(:directory? => true)
+
+        lambda { toque.copy_builtin_cookbooks('asdf') }.should raise_error
+      end
+
+    end
+
   end
 
   context "#clean_up" do
