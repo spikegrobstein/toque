@@ -43,7 +43,7 @@ Capistrano::Configuration.instance.load do
   namespace :chef do
 
     desc "Run all configured recipes"
-    task :run_recipes do
+    task :run_recipes, :except => { :no_cookbooks => true } do
       old_user = user
       # all chef stuff must use sudo
       set :user, admin_user
@@ -71,7 +71,7 @@ Capistrano::Configuration.instance.load do
 
     # push all chef configurations to server
     desc "[internal] Upload cookbooks to all configured servers."
-    task :upload_cookbooks do
+    task :upload_cookbooks, :except => { :no_cookbooks => true } do
       @cleaned_up = false
 
       cookbooks_path = toque.build_cookbooks
