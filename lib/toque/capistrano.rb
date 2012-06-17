@@ -3,8 +3,16 @@ require 'fileutils'
 
 Capistrano::Configuration.instance.load do
 
+  # gank the _cset function from capistrano's deploy code
+  # we can't necessarily assume that deploy was loaded, so let's just redefine it.
+  def _cset(name, *args, &block)
+    unless exists?(name)
+      set(name, *args, &block)
+    end
+  end
+
   set(:toque) { Toque.new }
-  set(:user) { fetch(:deploy_user, nil) }
+  _cset(:user) { fetch(:deploy_user, nil) }
 
   # initialize the toque object
   on :load do
