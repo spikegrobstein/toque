@@ -59,8 +59,10 @@ Capistrano::Configuration.instance.load do
       upload_cookbooks
 
       toque.recipes.each do |recipe, options|
+        # upload the runlist file
         put toque.json_for_runlist(recipe), "#{ Toque::TMP_DIR }/#{ Toque::JSON_FILENAME }"
 
+        # run the recipes.
         sudo "chef-solo -c #{ Toque::TMP_DIR }/#{ Toque::SOLO_CONFIG_FILENAME } -j #{ Toque::TMP_DIR }/#{ Toque::JSON_FILENAME }", options
       end
 
