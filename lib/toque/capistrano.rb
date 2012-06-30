@@ -58,13 +58,36 @@ Capistrano::Configuration.instance.load do
 
       upload_cookbooks
 
-      toque.recipes.each do |recipe, options|
-        # upload the runlist file
-        put toque.json_for_runlist(recipe), "#{ Toque::TMP_DIR }/#{ Toque::JSON_FILENAME }"
+      default_server_opts = { :except => { :no_chef => true } }
 
-        # run the recipes.
-        sudo "chef-solo -c #{ Toque::TMP_DIR }/#{ Toque::SOLO_CONFIG_FILENAME } -j #{ Toque::TMP_DIR }/#{ Toque::JSON_FILENAME }", options
+      servers = find_servers( default_server_opts )
+      servers_with_cookbooks = []
+
+      servers.each do |s|
+        #puts "checking server: #{s.inspect}"
+        runlist = []
+
+        # iterate over each recipe and build the runlist for the given server
+        # then upload json with that runlist to that server
+        toque.recipes.each do |recipe, options|
+          if find_servers(options).include?(s)
+            #puts "adding #{recipe} to #{s}"
+            runlist << recipe
+          end
+        end
+
+        # if this server didn't match any recipes, then skip it
+        next if runlist.count == 0
+
+        servers_with_cookbooks << s.host
+
+        #puts "uploading runlist to server #{s} -- #{runlist.inspect}"
+        put toque.json_for_runlist(runlist), "#{ Toque::TMP_DIR }/#{ Toque::JSON_FILENAME }", :hosts => s.host
+
       end
+
+      # run chef-solo on any servers that we put a runlist on
+      sudo "chef-solo -c #{ Toque::TMP_DIR }/#{ Toque::SOLO_CONFIG_FILENAME } -j #{ Toque::TMP_DIR }/#{ Toque::JSON_FILENAME }", :hosts => servers_with_cookbooks
 
       cleanup_cookbooks unless fetch(:toque_no_cleanup, false)
 
