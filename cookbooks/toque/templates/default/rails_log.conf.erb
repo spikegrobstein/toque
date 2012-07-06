@@ -1,7 +1,6 @@
 <%= @logs_path %>/*.log {
-  rotate 7
+  rotate <%= @rotate_count %>
   daily
   compress
-  notifempty
   copytruncate
 }
