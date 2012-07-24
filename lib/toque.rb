@@ -137,6 +137,7 @@ class Toque
     @tmpdir ||= Dir.mktmpdir('toque_cookbooks')
 
     @cookbooks.each do |cb|
+      puts "copying cookbook: #{cb}"
       FileUtils.cp_r cb, @tmpdir
     end
 
