@@ -13,10 +13,12 @@
 # * deploy_user
 # * resque_queues -- default '*'
 # * resque_queues_X -- worker-specific resque queues, any undefined ones will fall back to resque_queues setting, which defaults to '*'
+# * resque_default_start -- whether to have resque start on-boot. defaults to true
 
 @resque_worker_count = node.cap['resque_worker_count'] || 6
 @resque_queues = node.cap['resque_queues'] || '*'
 @master_config = "#{ node.cap.application }-resque"
+@resque_default_start = node.cap.resque_default_start
 
 template_variables = {
   :shared_path => node.cap.shared_path,
@@ -25,7 +27,8 @@ template_variables = {
   :queues => @resque_queues,
   :worker_count => @resque_worker_count,
   :rails_env => node.cap[:rails_env] || 'development',
-  :current_path => node.cap.current_path
+  :current_path => node.cap.current_path,
+  :resque_default_start => @resque_default_start
 }
 
 template "/etc/init/#{ @master_config }.conf" do

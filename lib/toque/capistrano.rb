@@ -14,6 +14,9 @@ Capistrano::Configuration.instance.load do
   set(:toque) { Toque.new }
   _cset(:user) { fetch(:deploy_user, nil) }
 
+  # resque recipe variables
+  _cset(:resque_default_start) { true }
+
   # initialize the toque object
   on :load do
 
