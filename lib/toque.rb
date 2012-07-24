@@ -136,7 +136,9 @@ class Toque
     raise "No cookbooks have been registered" if cookbooks.count == 0
     @tmpdir ||= Dir.mktmpdir('toque_cookbooks')
 
-    FileUtils.cp_r @cookbooks, @tmpdir
+    @cookbooks.each do |cb|
+      FileUtils.cp_r cb, @tmpdir
+    end
 
     @tmpdir
   end
