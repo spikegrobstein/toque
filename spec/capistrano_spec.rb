@@ -37,7 +37,7 @@ describe "Capistrano Toque" do
         config.should_receive(:toque_check_cookbooks).and_return(true)
 
         t = config.find_task('chef:upload_cookbooks')
-        ap t
+        #ap t
         t.instance_eval do
           @block.should_receive(:call).and_return(false)
         end

@@ -108,7 +108,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       @cleaned_up = false
 
       cookbooks_path = toque.build_cookbooks
-      puts "built cookbooks path: #{ cookbooks_path }"
+      logger.info "built cookbooks path: #{ cookbooks_path }"
 
       # upload the cookbooks
       # if we fail to do that, it's probably because there are leftover cookbooks from a previous run
@@ -120,7 +120,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       rescue
         raise "Failed to clean up cookbooks" if @cleaned_up
 
-        puts "Previous toque run did not complete, cleaning up..."
+        logger.info "Previous toque run did not complete, cleaning up..."
 
         cleanup_cookbooks
         @cleaned_up = true
