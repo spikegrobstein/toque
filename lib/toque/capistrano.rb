@@ -1,7 +1,7 @@
 require 'toque'
 require 'fileutils'
 
-Capistrano::Configuration.instance.load do
+Capistrano::Configuration.instance(:must_exist).load do
 
   # gank the _cset function from capistrano's deploy code
   # we can't necessarily assume that deploy was loaded, so let's just redefine it.

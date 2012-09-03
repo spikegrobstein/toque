@@ -1,112 +1,129 @@
 require 'capistrano'
 require 'awesome_print'
 
-require File.dirname(__FILE__) + '/../lib/toque/capistrano'
 
-describe Capistrano::Toque do
+describe "Capistrano Toque" do
   let (:config) { Capistrano::Configuration.new }
 
   let(:admin_user) { 'administrator' }
 
   before do
-    Capistrano::Toque.load_into(config)
+    config.load do
+      require File.dirname(__FILE__) + '/../lib/toque/capistrano'
+    end
   end
 
-  context "toque:run_recipes" do
+  context "chef:run_recipes" do
 
-    it "should set the user to the admin user" do
-      config.set(:admin_user, admin_user)
+    context "without defined cookbooks" do
+      it "should raise an error" do
+        lambda { config.find_and_execute_task('chef:run_recipes') }.should raise_error
 
-      config.should_receive(:set).with(:user, admin_user)
-      config.should_receive(:toque_check_cookbooks).and_return(true)
+      end
+    end
 
-      t = config.find_task('toque:upload_cookbooks')
-      ap t
-      t.instance_eval do
-        @block.should_receive(:call).and_return(false)
+    context "with defined cookbooks" do
+
+      before do
+        config.load do
+          cookbook :default
+        end
       end
 
-      #ap config.find_task('toque:upload_cookbooks')
+      it "should set the user to the admin user" do
+        config.set(:admin_user, admin_user)
 
-      config.find_and_execute_task('toque:run_recipes')
-    end
+        config.should_receive(:set).with(:user, admin_user)
+        config.should_receive(:toque_check_cookbooks).and_return(true)
 
-    it "should upload the cookbooks"
+        t = config.find_task('chef:upload_cookbooks')
+        ap t
+        t.instance_eval do
+          @block.should_receive(:call).and_return(false)
+        end
 
-    it "should initialize Toque with variables"
+        #ap config.find_task('chef:upload_cookbooks')
 
-    it "should run chef-solo for each recipe"
-
-    context "cleaning up cookbooks" do
-
-      it "should clean up cookbooks"
-
-      it "should not clean up cookbooks if :toque_no_cleanup is set"
-
-    end
-
-    it "should set :user back to the old value"
-
-  end
-
-  context "toque:upload_cookbooks" do
-
-    context "when locating cookbooks directory" do
-
-      it "should raise an error if cookbooks directory does not exist"
-
-      it "should raise an error if cookbooks directory is not a directory"
-
-    end
-
-    context "when uploading cookbooks" do
-
-      it "should create the cookbooks directory"
+        config.find_and_execute_task('chef:run_recipes')
+      end
 
       it "should upload the cookbooks"
 
-      it "should try to clean up if it encounters an error"
+      it "should initialize Toque with variables"
 
-      context "when handling an error" do
+      it "should run chef-solo for each recipe"
 
-        it "should raise an error if we've already tried to clean up once"
+      context "cleaning up cookbooks" do
 
-        it "should call toque:cleanup_cookbooks"
+        it "should clean up cookbooks"
 
-        it "should set @cleaned_up to true"
+        it "should not clean up cookbooks if :toque_no_cleanup is set"
 
       end
 
-      it "should write solo.rb"
+      it "should set :user back to the old value"
 
     end
 
-  end
+    context "chef:upload_cookbooks" do
 
-  context "toque:cleanup_cookbooks" do
+      context "when locating cookbooks directory" do
 
-    it "should clean up the cookbooks directory"
+        it "should raise an error if cookbooks directory does not exist"
 
-  end
+        it "should raise an error if cookbooks directory is not a directory"
 
-  context "when chef_server is enabled" do
+      end
 
-    it "should define a chef_client task"
+      context "when uploading cookbooks" do
 
-    context "toque:chef_client" do
+        it "should create the cookbooks directory"
 
-      it "should run chef-client"
+        it "should upload the cookbooks"
+
+        it "should try to clean up if it encounters an error"
+
+        context "when handling an error" do
+
+          it "should raise an error if we've already tried to clean up once"
+
+          it "should call chef:cleanup_cookbooks"
+
+          it "should set @cleaned_up to true"
+
+        end
+
+        it "should write solo.rb"
+
+      end
 
     end
-  end
 
-  context "toque:init" do
+    context "chef:cleanup_cookbooks" do
 
-    context "toque:init:cookbooks" do
-
-      it "should copy the gem's cookbooks directory to the local app directory"
+      it "should clean up the cookbooks directory"
 
     end
 
+    context "when chef_server is enabled" do
+
+      it "should define a chef_client task"
+
+      context "chef:chef_client" do
+
+        it "should run chef-client"
+
+      end
+    end
+
+    context "chef:init" do
+
+      context "chef:init:cookbooks" do
+
+        it "should copy the gem's cookbooks directory to the local app directory"
+
+      end
+
+    end
   end
 end
