@@ -138,7 +138,7 @@ class Toque
 
     puts "Copying into #{ @tmpdir }"
 
-    @cookbooks.each do |cb|
+    self.cookbooks.each do |cb|
       puts "copying cookbook: #{cb}"
       FileUtils.cp_r cb, @tmpdir
     end

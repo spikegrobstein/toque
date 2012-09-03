@@ -85,14 +85,16 @@ describe Toque do
       end
 
       it "should create a cookbooks temp directory" do
-        toque.stub(:cookbooks => ['asdf'])
+        toque.should_receive(:cookbooks).at_least(:twice).and_return(['some_cookbook'])
         Dir.should_receive(:mktmpdir).and_return('/tmp/toque_cookbook_test_dir')
+        FileUtils.stub(:cp_r => true)
 
         toque.build_cookbooks
       end
 
       it "should copy the cookbooks into one cookbooks directory" do
-        toque.stub(:cookbooks => ['asdf'])
+        toque.should_receive(:cookbooks).at_least(:twice).and_return(['some_cookbook'])
+        Dir.stub(:mktmpdir => true)
         FileUtils.should_receive(:cp_r)
 
         toque.build_cookbooks
