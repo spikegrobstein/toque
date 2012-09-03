@@ -67,14 +67,12 @@ Capistrano::Configuration.instance(:must_exist).load do
       servers_with_cookbooks = []
 
       servers.each do |s|
-        #puts "checking server: #{s.inspect}"
         runlist = []
 
         # iterate over each recipe and build the runlist for the given server
         # then upload json with that runlist to that server
         toque.recipes.each do |recipe, options|
           if find_servers(options).include?(s)
-            #puts "adding #{recipe} to #{s}"
             runlist << recipe
           end
         end
@@ -84,7 +82,6 @@ Capistrano::Configuration.instance(:must_exist).load do
 
         servers_with_cookbooks << s.host
 
-        #puts "uploading runlist to server #{s} -- #{runlist.inspect}"
         put toque.json_for_runlist(runlist), "#{ Toque::TMP_DIR }/#{ Toque::JSON_FILENAME }", :hosts => s.host
 
       end

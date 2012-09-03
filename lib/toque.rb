@@ -136,10 +136,7 @@ class Toque
     raise "No cookbooks have been registered" if cookbooks.count == 0
     @tmpdir ||= Dir.mktmpdir('toque_cookbooks')
 
-    puts "Copying into #{ @tmpdir }"
-
     self.cookbooks.each do |cb|
-      puts "copying cookbook: #{cb}"
       FileUtils.cp_r cb, @tmpdir
     end
 
