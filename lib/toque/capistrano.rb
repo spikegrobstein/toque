@@ -118,7 +118,7 @@ Capistrano::Configuration.instance(:must_exist).load do
         run "mkdir -p #{ Toque::TMP_DIR }"
         upload "#{ cookbooks_path }/cookbooks", "#{ Toque::TMP_DIR }/#{ Toque::COOKBOOKS_DIR }", :max_hosts => 4
       rescue
-        raise "Failed to clean up cookbooks" if @cleaned_up
+        abort "Failed to clean up cookbooks" if @cleaned_up
 
         logger.info "Previous toque run did not complete, cleaning up..."
 

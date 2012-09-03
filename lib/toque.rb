@@ -57,10 +57,10 @@ class Toque
     end
 
     # make sure the cookbook directory exists when trying to add it
-    raise "Cookbook directory not found: #{ cookbook_path }" unless File.exists?(cookbook_path)
+    abort "Cookbook directory not found: #{ cookbook_path }" unless File.exists?(cookbook_path)
 
     # don't allow duplicate cookbook names
-    raise "Cookbook with duplicate name added: #{ cookbook_path }" if cookbook_exists?(cookbook_path)
+    abort "Cookbook with duplicate name added: #{ cookbook_path }" if cookbook_exists?(cookbook_path)
 
     @cookbooks << cookbook_path
   end
@@ -81,7 +81,7 @@ class Toque
   # this is useful if you want to modify the existing cookbook/recipes
   # the capistrano recipe should not add_cookbook :default in this case.
   def copy_builtin_cookbooks(cookbook_path)
-    raise "Cookbook directory already exists: #{ cookbook_path }" if File.exists?(cookbook_path) or !File.directory?(File.dirname(cookbook_path))
+    abort "Cookbook directory already exists: #{ cookbook_path }" if File.exists?(cookbook_path) or !File.directory?(File.dirname(cookbook_path))
 
     FileUtils.cp_r default_cookbook_path, cookbook_path
   end
@@ -89,7 +89,7 @@ class Toque
   # initialize the node json that we're going to use
   # this is called to cache the node_json so we can modify it later
   def init_node_json(variables)
-    raise "Must supply capistrano variables. None given." if variables.nil?
+    abort "Must supply capistrano variables. None given." if variables.nil?
 
     # build the json data
     @node_json = {}
@@ -133,7 +133,7 @@ class Toque
 
   # gathers all registered cookbooks into a new temp directory
   def build_cookbooks
-    raise "No cookbooks have been registered" if cookbooks.count == 0
+    abort "No cookbooks have been registered" if cookbooks.count == 0
     @tmpdir ||= Dir.mktmpdir('toque_cookbooks')
 
     self.cookbooks.each do |cb|
