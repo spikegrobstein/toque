@@ -79,7 +79,7 @@ describe Toque do
     context "#build_cookbooks" do
 
       it "should raise an error if there are no registered cookbooks" do
-        toque.stub(:cookbooks => [])
+        toque.should_receive(:cookbooks).and_return([])
 
         lambda { toque.build_cookbooks }.should raise_error
       end
