@@ -43,24 +43,27 @@ describe Toque do
   context "cookbooks" do
 
     context "#add_cookbook" do
+      let(:new_cookbook_path) { 'some_cookbook' }
 
       it "should add a cookbook to the @cookbooks array" do
-        File.stub(:exists? => true)
-        lambda { toque.add_cookbook('asdf') }.should change { toque.cookbooks.count }.by(1)
+        File.should_receive(:exists?).with(new_cookbook_path).and_return(true)
+        lambda { toque.add_cookbook(new_cookbook_path) }.should change { toque.cookbooks.count }.by(1)
       end
 
       it "should raise an error if the added cookbook does not exist" do
-        File.stub(:exists? => false)
-        lambda { toque.add_cookbook('asdf') }.should raise_error
+        File.should_receive(:exists?).with(new_cookbook_path).and_return(false)
+        lambda { toque.add_cookbook(new_cookbook_path) }.should raise_error
       end
 
       it "should accept :default as a symbol and add the gem's cookbooks" do
-        toque.should_receive(:default_cookbook_path).exactly(:twice).and_return('asdf')
-        File.stub(:exists? => true)
+        default_cookbook_path = toque.send(:default_cookbook_path)
+
+        File.should_receive(:exists?).with(default_cookbook_path).and_return(true)
+        toque.should_receive(:default_cookbook_path).exactly(:once).and_return(default_cookbook_path)
 
         toque.add_cookbook :default
 
-        toque.cookbooks.last.should == toque.send(:default_cookbook_path)
+        toque.cookbooks.last.should == default_cookbook_path
       end
 
       it "should raise an error if 2 cookbooks with the same basename are added" do
