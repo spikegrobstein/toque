@@ -39,7 +39,7 @@ module Toque
         begin
           # ignore ignored vars
           next if ignored_vars.include?(k.to_sym)
-          next if k.match(/^mailgun/) # internal fix for our app
+          next if k.to_s.match(/^mailgun/) # internal fix for our app
 
           # if the variable is callable, call it, so as to dereference it
           v = v.call if v.respond_to? :call
